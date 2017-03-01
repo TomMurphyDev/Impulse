@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="impulsevid" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\tomo\\Desktop\\Impulse\\impulsevid_Runtime\\impulsevidService\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\tomo\\Desktop\\Impulse\\impulsevid_Runtime\\impulsevidService\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="MS_TableConnectionString-Web.config Connection String" description="" value="Data Source=tcp:impserv.database.windows.net,1433;Initial Catalog=impdb;User ID=tmdev@impserv;Password=tom@1991" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\tomo\\Desktop\\Impulse\\impulsevid_Runtime\\impulsevidService\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MS_TableConnectionString']/@connectionString" />
+  </parameter>
+</parameters>
