@@ -46,10 +46,6 @@ import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUse
 import static android.R.attr.button;
 //TODO add permission request
 public class LaunchActivity extends AppCompatActivity {
-    private static final int MY_PERMISSIONS_FINE_LOCATION = 102;
-    private static final int MY_PERMISSIONS_READ_EXT_STORAGE = 103;
-    private static final int MY_PERMISSIONS_EXT_STORAGE = 104;
-    private static final int MY_PERMISSIONS_REQUEST_USE_CAMERA =101 ;
     //Storage variable for client application
     private MobileServiceClient mClient;
     //Table used to access data from backend
@@ -91,40 +87,6 @@ public class LaunchActivity extends AppCompatActivity {
         } catch (Exception e){
             //createAndShowDialog(e, "Error");
             Log.v(TAG, "General Error");
-        }
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},
-                        MY_PERMISSIONS_REQUEST_USE_CAMERA);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_EXT_STORAGE);
-            }
-
         }
         authenticate();
     }
@@ -168,32 +130,6 @@ public class LaunchActivity extends AppCompatActivity {
                     loadMain();
                 }
             });
-        }
-    }
-    /**
-     * Accessed on 2/3/16
-     * Requesting permissions
-     * link:https://developer.android.com/training/permissions/requesting.html
-    * **/
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_USE_CAMERA: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
         }
     }
     public void loadMain()
