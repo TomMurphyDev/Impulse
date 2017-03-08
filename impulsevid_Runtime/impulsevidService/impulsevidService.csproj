@@ -155,8 +155,10 @@
   <ItemGroup>
     <Compile Include="App_Start\Startup.MobileApp.cs" />
     <Compile Include="App_Start\Startup.Swagger.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DataObjects\Profile.cs" />
     <Compile Include="DataObjects\TodoItem.cs" />
     <Compile Include="Models\impulsevidContext.cs" />
     <Compile Include="Startup.cs" />

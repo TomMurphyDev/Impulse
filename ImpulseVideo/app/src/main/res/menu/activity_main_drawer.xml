@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/profile" />
+        <item
+            android:id="@+id/nav_my_videos"
+            android:icon="@drawable/ic_ondemand_video_black_24dp"
+            android:title="@string/MyVideos" />
+        <item
+            android:id="@+id/nav_trends"
+            android:icon="@drawable/ic_whatshot_black_24dp"
+            android:title="@string/Trending" />
+        <item
+            android:id="@+id/nav_Analytics"
+            android:icon="@drawable/ic_school_black_24dp"
+            android:title="@string/Analytics" />
+    </group>
+
+    <item android:title="@string/Categories">
+        <menu>
+            <item
+                android:id="@+id/nav_comedy"
+                android:icon="@drawable/ic_mood_black_24dp"
+                android:title="@string/Comedy" />
+            <item
+                android:id="@+id/nav_sport"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/Sport" />
+            <item
+                android:id="@+id/nav_music"
+                android:icon="@drawable/ic_album_black_24dp"
+                android:title="@string/Music" />
+            <item
+                android:id="@+id/nav_news"
+                android:icon="@drawable/ic_school_black_24dp"
+                android:title="@string/News" />
+            <item
+                android:id="@+id/nav_other"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/Other" />
+        </menu>
+    </item>
+
+</menu>
