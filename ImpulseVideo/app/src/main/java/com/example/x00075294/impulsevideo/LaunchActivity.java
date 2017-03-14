@@ -47,7 +47,7 @@ import static android.R.attr.button;
 //TODO add permission request
 public class LaunchActivity extends AppCompatActivity {
     //Storage variable for client application
-    private MobileServiceClient mClient;
+    public MobileServiceClient mClient;
     public static final String SHAREDPREFFILE = "temp";
     public static final String USERIDPREF = "uid";
     public static final String TOKENPREF = "tkn";
@@ -90,6 +90,7 @@ public class LaunchActivity extends AppCompatActivity {
      * @param task
      * @return
      */
+
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -206,6 +207,7 @@ public class LaunchActivity extends AppCompatActivity {
     {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         Editor editor = prefs.edit();
+        Log.v(TAG, "Here is id ---> : "+user.getUserId());
         editor.putString(USERIDPREF, user.getUserId());
         editor.putString(TOKENPREF, user.getAuthenticationToken());
         editor.commit();
@@ -223,7 +225,6 @@ public class LaunchActivity extends AppCompatActivity {
         MobileServiceUser user = new MobileServiceUser(userId);
         user.setAuthenticationToken(token);
         client.setCurrentUser(user);
-
         return true;
     }
 }

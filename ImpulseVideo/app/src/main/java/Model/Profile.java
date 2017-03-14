@@ -5,4 +5,43 @@ package Model;
  */
 
 public class Profile{
+    public String Uid ;
+    public String Username;
+    public String Location ;
+    public String Bio;
+
+    public Profile(){
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
+    }
+
+    public String getUsername() {
+        return Username;
+    }
+
+    public void setUsername(String username) {
+        Username = username;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
+    }
+
+    public String getBio() {
+        return Bio;
+    }
+
+    public void setBio(String bio) {
+        Bio = bio;
+    }
 }
