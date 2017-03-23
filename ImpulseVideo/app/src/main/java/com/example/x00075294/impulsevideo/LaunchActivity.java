@@ -32,27 +32,26 @@ import java.util.concurrent.TimeUnit;
 //Login in imports
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceAuthenticationProvider;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
-
+import Model.Profile;
 import static android.R.attr.button;
-//TODO add permission request
 public class LaunchActivity extends AppCompatActivity {
     //Storage variable for client application
     public MobileServiceClient mClient;
+    private MobileServiceTable<Profile> mToDoTable;
     public static final String SHAREDPREFFILE = "temp";
     public static final String USERIDPREF = "uid";
     public static final String TOKENPREF = "tkn";
     // tag for log cat filtering
     private static final String TAG = "IMP:Launcher -->: ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +73,13 @@ public class LaunchActivity extends AppCompatActivity {
                     return client;
                 }
             });
+            mToDoTable = mClient.getTable(Profile.class);
         } catch (MalformedURLException e) {
-            Log.v(TAG, "MAlformed Url");
+            Log.v(TAG, "MAlformed Url" );
             //createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
-        } catch (Exception e){
+        } catch (Exception e) {
             //createAndShowDialog(e, "Error");
-            Log.v(TAG, "General Error");
+            Log.v(TAG, "General Error : " + e.getMessage());
         }
         authenticate();
     }
@@ -87,10 +87,40 @@ public class LaunchActivity extends AppCompatActivity {
      * Run an ASync task on the corresponding executor
      * Android Apps Quickstart
      * Accessed 16/02/17
-     * @param task
-     * @return
      */
 
+    public Profile addItemInTable(Profile item) throws ExecutionException, InterruptedException {
+        Profile entity = mToDoTable.insert(item).get();
+        return entity;
+    }
+    public void addProfile() {
+        if (mClient == null) {
+            return;
+        }
+
+        // Create a new Profile
+        SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+        final Profile initial = new Profile(prefs.getString(USERIDPREF, null));
+        // Insert the new item
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    final Profile entity = addItemInTable(initial);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                } catch (final Exception e) {
+                    Log.v(TAG, "Insert error : " + e.getMessage());
+                    createAndShowDialogFromTask(e, "Error");
+                }
+                return null;
+            }
+        };
+        runAsyncTask(task);
+    }
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -101,67 +131,36 @@ public class LaunchActivity extends AppCompatActivity {
     //TODO Add filter for not expired token ..............
     private void authenticate() {
         // We first try to load a token cache if one exists.
-        if (loadUserTokenCache(mClient))
-        {
+        if (loadUserTokenCache(mClient)) {
             Log.v(TAG, "Found Previous Login");
             loadMain();
         }
         // If we failed to load a token cache, login and create a token cache
-        else
-        {
+        else {
             // Login using the Google provider.
             ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);
             Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
                 @Override
                 public void onFailure(Throwable exc) {
                     createAndShowDialog("You must log in. Login Required", "Error");
-
                 }
                 @Override
                 public void onSuccess(MobileServiceUser user) {
                     Log.v(TAG, "Successful Login Moving on ");
                     cacheUserToken(mClient.getCurrentUser());
+                    addProfile();
                     loadMain();
                 }
             });
         }
     }
-    public void loadMain()
-    {
+
+    public void loadMain() {
+        Log.v(TAG, "Insert passed");
         Log.v(TAG, "Load main ..... ");
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    /**
-     * Logic for what happens during button on click
-     *
-     private void getStuff() throws MobileServiceException, ExecutionException, InterruptedException {
-     //assume that mClient Successful in onCreate
-     if (mClient == null) {
-     return;
-     }
-     //Async task for long running background applications
-     AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
-    @Override
-    protected Void doInBackground(Void... params) {
-    try {
-    //checkItemInTable();
-    runOnUiThread(new Runnable() {
-    @Override
-    public void run() {
-    getList.setText("U hit he button");
-    }
-    });
-    } catch (final Exception e) {
-    //createAndShowDialogFromTask(e, "Error");
-    }
-    return null;
-    }
-    };
-     runAsyncTask(task);
-     }
-     **/
-
     private void createAndShowDialogFromTask(final Exception exception, String title) {
         runOnUiThread(new Runnable() {
             @Override
@@ -170,50 +169,40 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
     }
-
-
     /**
      * Creates a dialog and shows it
      *
-     * @param exception
-     *            The exception to show in the dialog
-     * @param title
-     *            The dialog title
+     * @param exception The exception to show in the dialog
+     * @param title     The dialog title
      */
     private void createAndShowDialog(Exception exception, String title) {
         Throwable ex = exception;
-        if(exception.getCause() != null){
+        if (exception.getCause() != null) {
             ex = exception.getCause();
         }
         createAndShowDialog(ex.getMessage(), title);
     }
-
     /**
      * Creates a dialog and shows it
      *
-     * @param message
-     *            The dialog message
-     * @param title
-     *            The dialog title
+     * @param message The dialog message
+     * @param title   The dialog title
      */
     private void createAndShowDialog(final String message, final String title) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setMessage(message);
         builder.setTitle(title);
         builder.create().show();
     }
-    private void cacheUserToken(MobileServiceUser user)
-    {
+    private void cacheUserToken(MobileServiceUser user) {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         Editor editor = prefs.edit();
-        Log.v(TAG, "Here is id ---> : "+user.getUserId());
+        Log.v(TAG, "Here is id ---> : " + user.getUserId());
         editor.putString(USERIDPREF, user.getUserId());
         editor.putString(TOKENPREF, user.getAuthenticationToken());
         editor.commit();
     }
-    private boolean loadUserTokenCache(MobileServiceClient client)
-    {
+    private boolean loadUserTokenCache(MobileServiceClient client) {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         String userId = prefs.getString(USERIDPREF, null);
         if (userId == null)
@@ -221,7 +210,6 @@ public class LaunchActivity extends AppCompatActivity {
         String token = prefs.getString(TOKENPREF, null);
         if (token == null)
             return false;
-
         MobileServiceUser user = new MobileServiceUser(userId);
         user.setAuthenticationToken(token);
         client.setCurrentUser(user);

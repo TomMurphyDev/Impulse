@@ -9,7 +9,6 @@ using impulsevidService.Models;
 
 namespace impulsevidService.Controllers
 {
-    [Authorize]
     public class ProfileController : TableController<Profile>
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -41,7 +40,7 @@ namespace impulsevidService.Controllers
         public async Task<IHttpActionResult> PostProfile(Profile item)
         {
             Profile current = await InsertAsync(item);
-            return CreatedAtRoute("Tables", new { id = current.Id }, current);
+            return CreatedAtRoute("Tables", new { id = current.Uid }, current);
         }
 
         // DELETE tables/Profile/48D68C86-6EA6-4C25-AA33-223FC9A27959

@@ -5,10 +5,16 @@ package Model;
  */
 
 public class Profile{
+    @com.google.gson.annotations.SerializedName("id")
+    public String id;
     public String Uid ;
     public String Username;
     public String Location ;
     public String Bio;
+
+    public Profile(String uid) {
+        Uid = uid;
+    }
 
     public Profile(){
     }

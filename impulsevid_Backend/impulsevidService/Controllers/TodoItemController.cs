@@ -9,7 +9,6 @@ using impulsevidService.Models;
 
 namespace impulsevidService.Controllers
 {
-    [Authorize]
     public class TodoItemController : TableController<TodoItem>
     {
         protected override void Initialize(HttpControllerContext controllerContext)

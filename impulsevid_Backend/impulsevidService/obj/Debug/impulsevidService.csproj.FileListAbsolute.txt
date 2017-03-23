@@ -111,6 +111,9 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\k
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\ru\System.Spatial.resources.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\obj\Debug\impulsevidService.csprojResolveAssemblyReference.cache
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\obj\Debug\impulsevidService.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\obj\Debug\impulsevidService.pdb
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Azure.Mobile.Server.Swagger.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Swashbuckle.Core.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Azure.Mobile.Server.Swagger.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\obj\Debug\impulsevidService.csprojResolveAssemblyReference.cache

@@ -46,10 +46,11 @@ namespace impulsevidService
                 });
             }
             app.UseWebApi(config);
+            ConfigureSwagger(config);
         }
     }
 
-    public class impulsevidInitializer : CreateDatabaseIfNotExists<impulsevidContext>
+    public class impulsevidInitializer : DropCreateDatabaseIfModelChanges<impulsevidContext>
     {
         protected override void Seed(impulsevidContext context)
         {
@@ -62,6 +63,16 @@ namespace impulsevidService
             foreach (TodoItem todoItem in todoItems)
             {
                 context.Set<TodoItem>().Add(todoItem);
+            }
+            List<Profile> profiles = new List<Profile>
+            {
+                new Profile { Id = Guid.NewGuid().ToString(), Username = "First item"}
+        
+            };
+
+            foreach (Profile p in profiles)
+            {
+                context.Set<Profile>().Add(p);
             }
 
             base.Seed(context);
