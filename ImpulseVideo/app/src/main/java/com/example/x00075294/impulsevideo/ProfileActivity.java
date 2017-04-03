@@ -1,12 +1,16 @@
 package com.example.x00075294.impulsevideo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,46 +26,46 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceException;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.squareup.okhttp.OkHttpClient;
+import com.microsoft.azure.storage.*;
+import com.microsoft.azure.storage.blob.*;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import Model.Profile;
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.x00075294.impulsevideo.LaunchActivity.SHAREDPREFFILE;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "IMP:Profile -->: ";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String IMAGELOCAL ="prof";
     public MobileServiceClient mClient;
     private MobileServiceTable<Profile> mProfileTable;
     /**
      * Progress spinner to use for table operations
      */
     private ProgressBar mProgressBar;
+    public CircleImageView prof;
+    public Bitmap bm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent();
-                // Show only images, no videos or anything else
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                // Always show the chooser (if there are multiple options available)
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                performFileSearch();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         try {
             mClient = new MobileServiceClient(
                     "https://impulsevid.azurewebsites.net",
@@ -86,6 +90,50 @@ public class ProfileActivity extends AppCompatActivity {
             //createAndShowDialog(e, "Error");
             Log.v(TAG, "General Error");
         }
+
+        SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+        String imageId = prefs.getString(IMAGELOCAL, null);
+        prof = (CircleImageView) findViewById(R.id.profile_image);
+        if(imageId != null)
+        {
+            Uri imgUri = Uri.parse(imageId);
+            try {
+                bm = getBitmapFromUri(imgUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.v(TAG,  "To here " + imgUri.toString());
+        }
+        prof.setImageBitmap(bm);
+    }
+    /**
+     * Fires an intent to spin up the "file chooser" UI and select an image.
+     */
+    public void performFileSearch() {
+
+        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+        // browser.
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+        // Filter to only show results that can be "opened", such as a
+        // file (as opposed to a list of contacts or timezones)
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Filter to show only images, using the image MIME data type.
+        // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+        // To search for all documents available via installed storage providers,
+        // it would be "*/*".
+        intent.setType("image/*");
+
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
     }
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -128,9 +176,13 @@ public class ProfileActivity extends AppCompatActivity {
             Uri uri = data.getData();
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                Bitmap bitmap = getBitmapFromUri(uri);
                 Log.v(TAG, String.valueOf(bitmap));
-                ImageView profile = (ImageView)findViewById(R.id.imageView2);
+                SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(IMAGELOCAL,uri.toString());
+                editor.commit();
+                CircleImageView profile = (CircleImageView) findViewById(R.id.profile_image);
                 profile.setImageBitmap(bitmap);
                //ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 // imageView.setImageBitmap(bitmap);
@@ -162,5 +214,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         runAsyncTask(task);
+    }
+    public Bitmap loadImage(Uri in) throws IOException {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), in);
+        return bitmap;
     }
 }
