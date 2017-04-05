@@ -40,7 +40,7 @@ namespace impulsevidService.Controllers
         public async Task<IHttpActionResult> PostProfile(Profile item)
         {
             Profile current = await InsertAsync(item);
-            return CreatedAtRoute("Tables", new { id = current.Uid }, current);
+            return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
 
         // DELETE tables/Profile/48D68C86-6EA6-4C25-AA33-223FC9A27959

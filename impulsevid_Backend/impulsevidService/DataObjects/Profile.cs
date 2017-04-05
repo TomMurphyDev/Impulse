@@ -7,7 +7,6 @@ namespace impulsevidService.DataObjects
 {
     public class Profile:EntityData
     {
-        public string Uid { get; set;}
         public string Username { get; set; }
         public string Location { get; set; }
         public string Bio { get; set; }

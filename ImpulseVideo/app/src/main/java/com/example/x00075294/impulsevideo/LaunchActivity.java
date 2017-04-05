@@ -88,7 +88,6 @@ public class LaunchActivity extends AppCompatActivity {
      * Android Apps Quickstart
      * Accessed 16/02/17
      */
-
     public Profile addItemInTable(Profile item) throws ExecutionException, InterruptedException {
         Profile entity = mToDoTable.insert(item).get();
         return entity;
@@ -100,7 +99,7 @@ public class LaunchActivity extends AppCompatActivity {
 
         // Create a new Profile
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
-        final Profile initial = new Profile(prefs.getString(USERIDPREF, null));
+        final Profile initial = new Profile(prefs.getString(USERIDPREF, null).substring(4));
         // Insert the new item
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
             @Override
