@@ -52,6 +52,9 @@ import static com.example.x00075294.impulsevideo.LaunchActivity.TOKENPREF;
 import static com.example.x00075294.impulsevideo.LaunchActivity.USERIDPREF;
 
 public class ProfileActivity extends AppCompatActivity {
+    /*
+    * Member Values For debugging and app service access
+    * */
     private static final String TAG = "IMP:Profile -->: ";
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String IMAGELOCAL ="prof";
@@ -61,20 +64,29 @@ public class ProfileActivity extends AppCompatActivity {
     public static final String storageConnectionString = BlOB_CONN+ BLOB_NAME+BlOB_KEY;
     private MobileServiceTable<Profile> mProfileTable;
     private Bitmap bm;
-    //ui elements to manipulate
+    /*
+    *ui elements to manipulate
+    * Handlers
+     */
     private EditText uName;
     private EditText loca;
     private EditText bio;
-
+    /**
+     * On create called when activity is created provides initial connection to app service
+     * and layout inflation
+     * assigns on click properties to ui elements
+     * **/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        //Form fields hook up
         uName = (EditText) findViewById(R.id.input_uname);
         loca = (EditText) findViewById(R.id.input_loc);
         bio = (EditText) findViewById(R.id.input_bio);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //floating on click launches file search common intent
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +97,15 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*
       Progress spinner to use for table operations
-     */
+        */
         ProgressDialog mProgressDialog = new ProgressDialog(this);
+        /**
+         * make connection to app back end
+         * set timeout time longer
+         * Will fail if no internet
+         * TODO add connection check and snackbar warning if not
+         * TODO fix persistance issue of profile image :( either its the value or the token expiring?
+         * **/
         try {
             MobileServiceClient mClient = new MobileServiceClient(
                     "https://impulsevid.azurewebsites.net",
@@ -103,10 +122,13 @@ public class ProfileActivity extends AppCompatActivity {
                     return client;
                 }
             });
+            //local copy of table for manipulations to be performed on
             mProfileTable = mClient.getTable(Profile.class);
+            //load the verified user from google sign in
             if (loadUserTokenCache(mClient)) {
                 Log.v(TAG, "Found Previous Login");
             }
+            //download user profile details and add to acreen
             new LoadProfileDetails().execute();
         } catch (MalformedURLException e) {
             Log.v(TAG, "MAlformed Url");
@@ -115,6 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
             //createAndShowDialog(e, "Error");
             Log.v(TAG, "General Error");
         }
+        //load from storage the uri of the profile image and the long form of profile id
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         String imageId = prefs.getString(IMAGELOCAL, null);
         String profileId = prefs.getString(USERIDPREF, null);
@@ -122,6 +145,7 @@ public class ProfileActivity extends AppCompatActivity {
             profileId = profileId.substring(4);
             Log.v(TAG, " "+profileId);
         }
+        //custom imageview for circular framed images
         CircleImageView prof = (CircleImageView) findViewById(R.id.profile_image);
         if(imageId != null)
         {
@@ -134,15 +158,18 @@ public class ProfileActivity extends AppCompatActivity {
             Log.v(TAG,  "To here " + imgUri.toString());
         }
         prof.setImageBitmap(bm);
+        // assign upload button on click
         Button upload = (Button) findViewById(R.id.imageButton);
         final String finalProfileId = profileId;
         upload.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
+                // validate form using validateForm() method
                 if(validateForm()){
                     String userName = uName.getText().toString();
                     String location = loca.getText().toString();
                     String bi = bio.getText().toString();
+                    //temp final variable for uploading to
                     Profile p = new Profile(finalProfileId,userName,location,bi);
                     new uploadProfilePhoto().execute(p);
                 }

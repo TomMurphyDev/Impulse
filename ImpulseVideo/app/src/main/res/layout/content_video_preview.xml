@@ -29,11 +29,14 @@ tools:showIn="@layout/activity_video_preview">
     android:layout_height="0dip"
     android:orientation="vertical"
     android:layout_weight="6"
-    android:id="@+id/layout_bottom">
+    android:id="@+id/layout_bottom"
+        android:layout_margin="10dp"
+        android:showDividers="beginning|end">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollIndicators="right">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +49,8 @@ tools:showIn="@layout/activity_video_preview">
                 android:layout_height="wrap_content"
                 android:id="@+id/title_textview"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:layout_margin="5dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -58,7 +62,8 @@ tools:showIn="@layout/activity_video_preview">
                 android:fontFamily="sans-serif"
                 android:textSize="30sp"
                 style="@android:style/Widget.DeviceDefault.AutoCompleteTextView"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:layout_margin="5dp" />
 
             <TextView
                 android:text="@string/category"
@@ -66,21 +71,24 @@ tools:showIn="@layout/activity_video_preview">
                 android:layout_height="wrap_content"
                 android:id="@+id/cat_textview"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:layout_margin="5dp" />
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:id="@+id/spinner"
                 android:spinnerMode="dialog"
-                android:entries="@array/spinnerItems" />
+                android:entries="@array/spinnerItems"
+                android:layout_margin="5dp" />
 
             <TextView
                 android:text="@string/description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/description_textview"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:layout_margin="5dp" />
 
             <EditText
                 android:layout_width="match_parent"
