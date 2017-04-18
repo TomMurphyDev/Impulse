@@ -1,50 +1,34 @@
 package com.example.x00075294.impulsevideo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 //azure imports
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.microsoft.windowsazure.mobileservices.*;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.squareup.okhttp.OkHttpClient;
 import java.net.MalformedURLException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 //Login in imports
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceAuthenticationProvider;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
 import Model.Profile;
-import static android.R.attr.button;
+
 public class LaunchActivity extends AppCompatActivity {
     //Storage variable for client application
-    public MobileServiceClient mClient;
+    private MobileServiceClient mClient;
     private MobileServiceTable<Profile> mToDoTable;
     public static final String SHAREDPREFFILE = "temp";
     public static final String USERIDPREF = "uid";
@@ -88,11 +72,10 @@ public class LaunchActivity extends AppCompatActivity {
      * Android Apps Quickstart
      * Accessed 16/02/17
      */
-    public Profile addItemInTable(Profile item) throws ExecutionException, InterruptedException {
-        Profile entity = mToDoTable.insert(item).get();
-        return entity;
+    private Profile addItemInTable(Profile item) throws ExecutionException, InterruptedException {
+        return mToDoTable.insert(item).get();
     }
-    public void addProfile() {
+    private void addProfile() {
         if (mClient == null) {
             return;
         }
@@ -113,7 +96,7 @@ public class LaunchActivity extends AppCompatActivity {
                     });
                 } catch (final Exception e) {
                     Log.v(TAG, "Insert error : " + e.getMessage());
-                    createAndShowDialogFromTask(e, "Error");
+                    createAndShowDialogFromTask(e);
                 }
                 return null;
             }
@@ -141,7 +124,7 @@ public class LaunchActivity extends AppCompatActivity {
             Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
                 @Override
                 public void onFailure(Throwable exc) {
-                    createAndShowDialog("You must log in. Login Required", "Error");
+                    createAndShowDialog("You must log in. Login Required");
                 }
                 @Override
                 public void onSuccess(MobileServiceUser user) {
@@ -154,43 +137,41 @@ public class LaunchActivity extends AppCompatActivity {
         }
     }
 
-    public void loadMain() {
+    private void loadMain() {
         Log.v(TAG, "Insert passed");
         Log.v(TAG, "Load main ..... ");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    private void createAndShowDialogFromTask(final Exception exception, String title) {
+    private void createAndShowDialogFromTask(final Exception exception) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                createAndShowDialog(exception, "Error");
+                createAndShowDialog(exception);
             }
         });
     }
     /**
      * Creates a dialog and shows it
+     *  @param exception The exception to show in the dialog
      *
-     * @param exception The exception to show in the dialog
-     * @param title     The dialog title
      */
-    private void createAndShowDialog(Exception exception, String title) {
+    private void createAndShowDialog(Exception exception) {
         Throwable ex = exception;
         if (exception.getCause() != null) {
             ex = exception.getCause();
         }
-        createAndShowDialog(ex.getMessage(), title);
+        createAndShowDialog(ex.getMessage());
     }
     /**
      * Creates a dialog and shows it
+     *  @param message The dialog message
      *
-     * @param message The dialog message
-     * @param title   The dialog title
      */
-    private void createAndShowDialog(final String message, final String title) {
+    private void createAndShowDialog(final String message) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message);
-        builder.setTitle(title);
+        builder.setTitle("Error");
         builder.create().show();
     }
     private void cacheUserToken(MobileServiceUser user) {

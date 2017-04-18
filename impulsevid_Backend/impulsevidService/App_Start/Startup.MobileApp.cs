@@ -56,7 +56,7 @@ namespace impulsevidService
         {
             List<TodoItem> todoItems = new List<TodoItem>
             {
-                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "First item", Complete = false },
+                new TodoItem { Id = "999999", Text = "First item", Complete = false },
                 new TodoItem { Id = Guid.NewGuid().ToString(), Text = "Second item", Complete = false },
             };
 
@@ -66,7 +66,7 @@ namespace impulsevidService
             }
             List<Profile> profiles = new List<Profile>
             {
-                new Profile { Id = Guid.NewGuid().ToString(), Username = "First item"}
+                new Profile { Id = "999999", Username = "First item"}
         
             };
 
@@ -74,7 +74,16 @@ namespace impulsevidService
             {
                 context.Set<Profile>().Add(p);
             }
+            List<Video> videos = new List<Video>
+            {
+                new Video { Id = Guid.NewGuid().ToString(), Title = "First Video",ProfileID = "999999"}
 
+            };
+
+            foreach (Video v in videos)
+            {
+                context.Set<Video>().Add(v);
+            }
             base.Seed(context);
         }
     }

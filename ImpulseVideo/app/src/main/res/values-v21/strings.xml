@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio">Bio</string>
+    <string name="location">Location</string>
+    <string name="user_name">User Name</string>
+    <string name="impulse_video">IMPULSE VIDEO!</string>
+</resources>

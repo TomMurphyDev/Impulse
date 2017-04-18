@@ -3,7 +3,9 @@ package com.example.x00075294.impulsevideo;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -26,8 +28,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "IMP:Main -->: ";
     private static final int MY_PERMISSIONS_REQUEST_USE_CAMERA = 101;
-    private static final int MY_PERMISSIONS_WRITE_STORAGE = 102;
-
+    // --Commented out by Inspection (17/04/2017 23:26):private static final int MY_PERMISSIONS_WRITE_STORAGE = 102;
+    private static final int REQUEST_VIDEO_CAPTURE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +41,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                dispatchTakeVideoIntent();
             }
         });
 
@@ -110,8 +111,6 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-                return;
-
             }
 
         }
@@ -172,10 +171,28 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    public void loadProfile() {
+    private void dispatchTakeVideoIntent() {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+    private void loadProfile() {
         Log.v(TAG, "Load profile ..... ");
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
+    }
+    private void loadPreview(Uri v) {
+        Log.v(TAG, "Load preview ..... ");
+        Intent intent = new Intent(this, VideoPreviewActivity.class);
+        intent.putExtra("videoUri", v.toString());
+        startActivity(intent);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = intent.getData();
+            loadPreview(videoUri);
+        }
     }
 }

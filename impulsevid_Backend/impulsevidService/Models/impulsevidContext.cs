@@ -21,10 +21,9 @@ namespace impulsevidService.Models
         public impulsevidContext() : base(connectionStringName)
         {
         } 
-
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Profile> Profiles { get; set; }
-
+        public DbSet<Video> Videos { get; set;}
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(

@@ -6,10 +6,15 @@ package Model;
 
 public class Profile{
     @com.google.gson.annotations.SerializedName("id")
-    public String id;
-    public String Username;
-    public String Location ;
-    public String Bio;
+    private String id;
+    @com.google.gson.annotations.SerializedName("username")
+    private String Username;
+    @com.google.gson.annotations.SerializedName("location")
+    private String Location ;
+    @com.google.gson.annotations.SerializedName("bio")
+    private String Bio;
+    @com.google.gson.annotations.SerializedName("url")
+    private String Url;
 
     public Profile(String id) {
         this.id = id;
@@ -20,6 +25,14 @@ public class Profile{
 
     public Profile(){
     }
+
+    public Profile(String id,String userName, String location, String bi) {
+        this.id = id;
+        this.Username = userName;
+        this.Location = location;
+        this.Bio = bi;
+    }
+
     public String getUsername() {
         return Username;
     }
@@ -42,5 +55,12 @@ public class Profile{
 
     public void setBio(String bio) {
         Bio = bio;
+    }
+
+    public void setUrl(String url) {
+        Url = url;
+    }
+    public String getUrl(){
+        return Url;
     }
 }

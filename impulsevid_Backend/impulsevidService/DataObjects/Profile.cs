@@ -10,5 +10,9 @@ namespace impulsevidService.DataObjects
         public string Username { get; set; }
         public string Location { get; set; }
         public string Bio { get; set; }
+        public string url { get; set; }
+        //navigation property
+        public ICollection<Video> Videos { get; set; }
+    
     }
 }

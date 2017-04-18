@@ -104,4 +104,24 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_video_preview">VideoPreviewActivity</string>
+    <string name="profile_image_thumbnail">Profile Image Thumbnail</string>
+    <string name="android_studio">Android Studio</string>
+    <string name="android_studio_android_com">android.studio@android.com</string>
+    <string name="description">Description</string>
+    <string name="category">Category:</string>
+    <string name="choose_a_video_name">Choose a video name…</string>
+    <string name="video_title">Video Title:</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="bio">Bio</string>
+    <string name="location">Location</string>
+    <string name="user_name">User Name</string>
+    <string name="impulse_video">IMPULSE VIDEO!</string>
+    <string-array name="spinnerItems">
+        <item>Comedy</item>
+        <item>Music</item>
+        <item>Sport</item>
+        <item>News</item>
+        <item>Other</item>
+    </string-array>
 </resources>
