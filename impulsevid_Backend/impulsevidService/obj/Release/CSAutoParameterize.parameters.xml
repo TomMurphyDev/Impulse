@@ -3,4 +3,10 @@
   <parameter name="MS_TableConnectionString-Web.config Connection String" description="MS_TableConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-impulsevidService-20170314013321.mdf;Initial Catalog=aspnet-impulsevidService-20170314013321;Integrated Security=True;MultipleActiveResultSets=True" tags="SqlConnectionString">
     <parameterEntry kind="XmlFile" scope="C:\\Users\\tomo\\Desktop\\Impulse\\Impulse\\impulsevid_Backend\\impulsevidService\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MS_TableConnectionString']/@connectionString" />
   </parameter>
+  <parameter name="AzureWebJobsDashboard-Web.config Connection String" description="AzureWebJobsDashboard Connection String used in web.config by the application to access the database." defaultValue="DefaultEndpointsProtocol=https;AccountName=impstaging;AccountKey=1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==;EndpointSuffix=core.windows.net" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\tomo\\Desktop\\Impulse\\Impulse\\impulsevid_Backend\\impulsevidService\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AzureWebJobsDashboard']/@connectionString" />
+  </parameter>
+  <parameter name="AzureWebJobsStorage-Web.config Connection String" description="AzureWebJobsStorage Connection String used in web.config by the application to access the database." defaultValue="DefaultEndpointsProtocol=https;AccountName=impstaging;AccountKey=1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==;EndpointSuffix=core.windows.net" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\tomo\\Desktop\\Impulse\\Impulse\\impulsevid_Backend\\impulsevidService\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AzureWebJobsStorage']/@connectionString" />
+  </parameter>
 </parameters>

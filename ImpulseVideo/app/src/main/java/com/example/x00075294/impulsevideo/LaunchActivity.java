@@ -1,4 +1,5 @@
 package com.example.x00075294.impulsevideo;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -57,7 +58,15 @@ public class LaunchActivity extends AppCompatActivity {
                     return client;
                 }
             });
-            mToDoTable = mClient.getTable(Profile.class);
+            Log.v(TAG, " Client factory set up");
+            try
+            {
+                mToDoTable = mClient.getTable(Profile.class);
+            }
+            catch(Exception c)
+            {
+                Log.v(TAG, c.getMessage() );
+            }
         } catch (MalformedURLException e) {
             Log.v(TAG, "MAlformed Url" );
             //createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
@@ -79,7 +88,6 @@ public class LaunchActivity extends AppCompatActivity {
         if (mClient == null) {
             return;
         }
-
         // Create a new Profile
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         final Profile initial = new Profile(prefs.getString(USERIDPREF, null).substring(4));
@@ -88,7 +96,7 @@ public class LaunchActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    final Profile entity = addItemInTable(initial);
+                    addItemInTable(initial);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -96,6 +104,7 @@ public class LaunchActivity extends AppCompatActivity {
                     });
                 } catch (final Exception e) {
                     Log.v(TAG, "Insert error : " + e.getMessage());
+                    Log.v(TAG, "Insert error : " + e.getLocalizedMessage());
                     createAndShowDialogFromTask(e);
                 }
                 return null;
@@ -112,24 +121,43 @@ public class LaunchActivity extends AppCompatActivity {
     }
     //TODO Add filter for not expired token ..............
     private void authenticate() {
+        Log.v(TAG, "Begin Auth");
         // We first try to load a token cache if one exists.
         if (loadUserTokenCache(mClient)) {
-            Log.v(TAG, "Found Previous Login");
-            loadMain();
-        }
-        // If we failed to load a token cache, login and create a token cache
-        else {
-            // Login using the Google provider.
+            Log.v(TAG, "Found Previous Login in Shared Preferences but need to refresh token for userexperience");
+            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+            String token = prefs.getString(TOKENPREF, null);
             ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);
             Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
                 @Override
                 public void onFailure(Throwable exc) {
-                    createAndShowDialog("You must log in. Login Required");
+                    Log.v(TAG, " Login "+ exc.getLocalizedMessage());
+                    Log.v(TAG, "tkn:  "+ mClient.getCurrentUser().getAuthenticationToken());
+                    createAndShowDialog("Token expired u must log in");
                 }
                 @Override
                 public void onSuccess(MobileServiceUser user) {
                     Log.v(TAG, "Successful Login Moving on ");
-                    cacheUserToken(mClient.getCurrentUser());
+                    cacheUserToken(user);
+                    loadMain();
+                }
+            });
+        }
+        else
+        {
+            // Login using the Google provider.
+            Log.v(TAG, "Begin Auth First Timer");
+            ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);
+            Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
+                @Override
+                public void onFailure(Throwable exc) {
+                    //createAndShowDialog("You must log in. Login Required");
+                }
+                @Override
+                public void onSuccess(MobileServiceUser user) {
+                    Log.v(TAG, "Successful Login Moving on after pushing on ");
+                    Log.v(TAG, "tkn on success:  "+ mClient.getCurrentUser().getAuthenticationToken());
+                    cacheUserToken(user);
                     addProfile();
                     loadMain();
                 }
@@ -172,6 +200,28 @@ public class LaunchActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message);
         builder.setTitle("Error");
+        builder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Login using the Google provider.
+                ListenableFuture<MobileServiceUser> mLogin = mClient.login(MobileServiceAuthenticationProvider.Google);
+                Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
+                    @Override
+                    public void onFailure(Throwable exc) {
+                        //createAndShowDialog("You must log in. Login Required");
+                    }
+                    @Override
+                    public void onSuccess(MobileServiceUser user) {
+                        Log.v(TAG, "Successful Login Moving on after pushing on ");
+                        Log.v(TAG, "tkn on success:  "+ mClient.getCurrentUser().getAuthenticationToken());
+                        cacheUserToken(user);
+                        addProfile();
+                        loadMain();
+                    }
+                });
+            }
+        });
+        builder.setIcon(R.drawable.ic_person_black_24dp);
         builder.create().show();
     }
     private void cacheUserToken(MobileServiceUser user) {
@@ -180,7 +230,7 @@ public class LaunchActivity extends AppCompatActivity {
         Log.v(TAG, "Here is id ---> : " + user.getUserId());
         editor.putString(USERIDPREF, user.getUserId());
         editor.putString(TOKENPREF, user.getAuthenticationToken());
-        editor.commit();
+        editor.apply();
     }
     private boolean loadUserTokenCache(MobileServiceClient client) {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
@@ -192,7 +242,9 @@ public class LaunchActivity extends AppCompatActivity {
             return false;
         MobileServiceUser user = new MobileServiceUser(userId);
         user.setAuthenticationToken(token);
-        client.setCurrentUser(user);
+        Log.v(TAG, "Here is tkn from load value---> : " + user.getAuthenticationToken());
+        mClient = client;
+        mClient.setCurrentUser(user);
         return true;
     }
 }

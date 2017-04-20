@@ -26,6 +26,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSerializer;
+import com.microsoft.azure.storage.queue.CloudQueue;
+import com.microsoft.azure.storage.queue.CloudQueueClient;
+import com.microsoft.azure.storage.queue.CloudQueueMessage;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceException;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
@@ -44,6 +49,7 @@ import java.net.MalformedURLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import Model.BlobInformation;
 import Model.Profile;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,9 +58,16 @@ import static com.example.x00075294.impulsevideo.LaunchActivity.TOKENPREF;
 import static com.example.x00075294.impulsevideo.LaunchActivity.USERIDPREF;
 
 public class ProfileActivity extends AppCompatActivity {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, " Succesful Activity start run ui");
+        new LoadProfileDetails().execute();
+    }
+
     /*
-    * Member Values For debugging and app service access
-    * */
+        * Member Values For debugging and app service access
+        * */
     private static final String TAG = "IMP:Profile -->: ";
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String IMAGELOCAL ="prof";
@@ -68,6 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
     *ui elements to manipulate
     * Handlers
      */
+    private Button upload;
     private EditText uName;
     private EditText loca;
     private EditText bio;
@@ -86,6 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
         bio = (EditText) findViewById(R.id.input_bio);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         //floating on click launches file search common intent
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -96,15 +111,14 @@ public class ProfileActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*
-      Progress spinner to use for table operations
+           Progress spinner to use for table operations
         */
         ProgressDialog mProgressDialog = new ProgressDialog(this);
         /**
          * make connection to app back end
          * set timeout time longer
          * Will fail if no internet
-         * TODO add connection check and snackbar warning if not
-         * TODO fix persistance issue of profile image :( either its the value or the token expiring?
+         * TODO add connection check  and snackbar warning if not
          * **/
         try {
             MobileServiceClient mClient = new MobileServiceClient(
@@ -129,7 +143,6 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.v(TAG, "Found Previous Login");
             }
             //download user profile details and add to acreen
-            new LoadProfileDetails().execute();
         } catch (MalformedURLException e) {
             Log.v(TAG, "MAlformed Url");
             //createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
@@ -143,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
         String profileId = prefs.getString(USERIDPREF, null);
         if(profileId != null) {
             profileId = profileId.substring(4);
-            Log.v(TAG, " "+profileId);
+            Log.v(TAG, "here it falls down "+profileId);
         }
         //custom imageview for circular framed images
         CircleImageView prof = (CircleImageView) findViewById(R.id.profile_image);
@@ -159,7 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         prof.setImageBitmap(bm);
         // assign upload button on click
-        Button upload = (Button) findViewById(R.id.imageButton);
+        upload = (Button) findViewById(R.id.imageButton);
         final String finalProfileId = profileId;
         upload.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -176,6 +189,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     private boolean loadUserTokenCache(MobileServiceClient client) {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         String userId = prefs.getString(USERIDPREF, null);
@@ -312,13 +326,23 @@ public class ProfileActivity extends AppCompatActivity {
                 final String filePath = prefs.getString(IMAGELOCAL,null);
                 // Create or overwrite the "myimage.jpg" blob with contents from a local file.
                 CloudBlockBlob blob = container.getBlockBlobReference("profileImg.jpeg"); // "file:///mnt/sdcard/FileName.mp3"
-                Log.v(TAG, "Uploading file");
+                BlobContainerPermissions open = new BlobContainerPermissions();
+                open.setPublicAccess(BlobContainerPublicAccessType.BLOB);
+                container.uploadPermissions(open);
+                Log.v(TAG, "Uploading file to " +container.getName()+ "");
                 Uri vidPath = Uri.parse(filePath);
                 InputStream fileInputStream=getBaseContext().getContentResolver().openInputStream(vidPath);
                 //File source = new FilefromUri(path);
                 blob.upload(fileInputStream,fileInputStream.available());
                 profUrl = blob.getUri().toURL().toString();
                 Log.v(TAG, "Located at " + blob.getUri().toURL().toString());
+
+                CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
+                CloudQueue imgQ = queueClient.getQueueReference("thumbnailrequest");
+                imgQ.createIfNotExists();
+                BlobInformation convert = new BlobInformation(blob.getUri(),blob.getName(),profileId);
+                CloudQueueMessage test = new CloudQueueMessage(new Gson().toJson(convert));
+                imgQ.addMessage(test);
                 SharedPreferences.Editor editor = prefs.edit();
                 String IMAGEBlOB = "blob";
                 editor.putString(IMAGEBlOB,blob.getUri().toString());
@@ -385,13 +409,20 @@ public class ProfileActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (pd != null)
             {
+                if(lookup!= null)
+                {
+                    uName.setText(lookup.getUsername(), TextView.BufferType.EDITABLE);
+                    loca.setText(lookup.getLocation(), TextView.BufferType.EDITABLE);
+                    bio.setText(lookup.getBio(), TextView.BufferType.EDITABLE);
+                    Log.v(TAG, "Download Completed :)");
+                }
+                else
+                {
+                    uName.setText("profilenotfoud");
+                }
+                pd.dismiss();
                 //uName.setText(result.getClass().getName());
                 //Log.v(TAG,lookup.getUsername());
-                uName.setText(lookup.getUsername(), TextView.BufferType.EDITABLE);
-                loca.setText(lookup.getLocation(), TextView.BufferType.EDITABLE);
-                bio.setText(lookup.getBio(), TextView.BufferType.EDITABLE);
-                Log.v(TAG, "Download Completed :)");
-                pd.dismiss();
             }
         }
     }

@@ -7,12 +7,11 @@ namespace impulsevidService.DataObjects
 {
     public class Profile:EntityData
     {
+
         public string Username { get; set; }
         public string Location { get; set; }
         public string Bio { get; set; }
-        public string url { get; set; }
-        //navigation property
-        public ICollection<Video> Videos { get; set; }
-    
+        public string ProfileUrl { get; set; }
+        public string thumbUrl { get; set; }
     }
 }

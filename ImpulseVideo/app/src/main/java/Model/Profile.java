@@ -13,8 +13,10 @@ public class Profile{
     private String Location ;
     @com.google.gson.annotations.SerializedName("bio")
     private String Bio;
-    @com.google.gson.annotations.SerializedName("url")
-    private String Url;
+    @com.google.gson.annotations.SerializedName("profileUrl")
+    private String ProfileUrl;
+    @com.google.gson.annotations.SerializedName("thumbUrl")
+    private String ThumbnailUrl;
 
     public Profile(String id) {
         this.id = id;
@@ -58,9 +60,9 @@ public class Profile{
     }
 
     public void setUrl(String url) {
-        Url = url;
+        ProfileUrl = url;
     }
     public String getUrl(){
-        return Url;
+        return ProfileUrl;
     }
 }

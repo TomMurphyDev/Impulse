@@ -6,11 +6,34 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+
+import Model.Video;
+
 public class VideoPreviewActivity extends AppCompatActivity {
+    /*
+     * Member Values For debugging and app service access
+    **/
+    private static final String TAG = "IMP:VidUp -->" ;
+    private static final String BlOB_CONN ="DefaultEndpointsProtocol=https;AccountName=impstaging;AccountKey=1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==;EndpointSuffix=core.windows.net;";
+    private static final String BlOB_KEY ="1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==";
+    private static final String BLOB_NAME = "impstaging;";
+    public static final String storageConnectionString = BlOB_CONN+ BLOB_NAME+BlOB_KEY;
+    private MobileServiceTable<Video> mVideoTable;
+    /*
+    *ui elements to manipulate
+    * Handlers
+     */
+    /**
+     * On create called when activity is created provides initial connection to app service
+     * and layout inflation
+     * assigns on click properties to ui elements
+     * **/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +57,11 @@ public class VideoPreviewActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, " Succesful Activity start run ui and inflate");
     }
 
 }
