@@ -35,4 +35,82 @@ public class Video {
         StreamUrl = streamUrl;
         ThumbUrl = thumbUrl;
     }
+    public Video(String id, String title, String category, String description, String profileID, String blobUrl) {
+        this.id = id;
+        Title = title;
+        Category = category;
+        Description = description;
+        Available = false;
+        ProfileID = profileID;
+        BlobUrl = blobUrl;
+    }
+
+    public Video(String ti, String desc) {
+        Title = ti;
+        Description = desc;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public boolean isAvailable() {
+        return Available;
+    }
+
+    public void setAvailable(boolean available) {
+        Available = available;
+    }
+
+    public String getProfileID() {
+        return ProfileID;
+    }
+
+    public void setProfileID(String profileID) {
+        ProfileID = profileID;
+    }
+
+    public String getBlobUrl() {
+        return BlobUrl;
+    }
+
+    public void setBlobUrl(String blobUrl) {
+        BlobUrl = blobUrl;
+    }
+
+    public String getStreamUrl() {
+        return StreamUrl;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        StreamUrl = streamUrl;
+    }
+
+    public String getThumbUrl() {
+        return ThumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        ThumbUrl = thumbUrl;
+    }
 }
