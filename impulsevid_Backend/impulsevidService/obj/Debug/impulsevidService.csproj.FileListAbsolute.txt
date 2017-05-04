@@ -140,3 +140,8 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\M
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Azure.WebJobs.Host.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.IdentityModel.Logging.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.IdentityModel.Tokens.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Practices.TransientFaultHandling.Core.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.WindowsAzure.MediaServices.Client.Common.FileEncryption.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.WindowsAzure.MediaServices.Client.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Practices.TransientFaultHandling.Core.xml

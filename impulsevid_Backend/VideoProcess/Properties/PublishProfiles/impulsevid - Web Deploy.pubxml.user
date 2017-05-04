@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAfAck3F2OAEiCNDMZHfbtYAAAAAACAAAAAAAQZgAAAAEAACAAAAAUWdmf6RcG/XgKIO92+euQ7eIEH+nN+8myJmQopmAFQAAAAAAOgAAAAAIAACAAAABMMeTF2z3JRQDQhbCy6CCm7a/4e6aTBkG5R477UYPNv4AAAACuN4VOpFXds3fkubC+VNflnwgJjz9bm/+F8oVFIpD/AV3QkLrdXrvGf6JT1T8Svt/m0451bUPFP9T/VjsXKVl3ZiVlqJZdahW0MM8TgyJIO5rOpm2BxCwRRmVIXDRrEDcV3sQmencXt1liu0EjbugXxpd9KHusiVziwo0RiPF450AAAACO5kfguHSB2eLvmShr8VM3MQFF1MLkzknpbqKfMzdM822Fnpz/u90xhl2tpIN0xV8XomIZYtmo2g3lYxSjeUjh</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <AzureDBConnectionStrings Include="Data Source=tcp:impserv.database.windows.net,1433;Initial Catalog=impdb;User ID=tmdev@impserv;Password=tom@1991" />
+    <AzureDBConnectionStrings Include="Data Source=tcp:impserv.database.windows.net,1433;Initial Catalog=impdb;User ID=tmdev@impserv;Password=tom@1991" />
+    <AzureDBConnectionStrings Include="Data Source=tcp:impserv.database.windows.net,1433;Initial Catalog=impdb;User ID=tmdev@impserv;Password=tom@1991" />
+    <AzureDBConnectionStrings Include="pJ7qnzGA/7vusGbMYNWXGeToUkR6bo4W/yg3XeinDDY=" />
+  </ItemGroup>
+</Project>

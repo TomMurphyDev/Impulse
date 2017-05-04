@@ -117,6 +117,11 @@
     <string name="location">Location</string>
     <string name="user_name">User Name</string>
     <string name="impulse_video">IMPULSE VIDEO!</string>
+    <string name="retry">Retry</string>
+    <string name="storage_permission_denied">storage permission denied</string>
+    <string name="error_drm_not_supported">drm not supported</string>
+    <string name="error_drm_unsupported_scheme">drm scheme not supported</string>
+    <string name="error_drm_unknown">unknown drm</string>
     <string-array name="spinnerItems">
         <item>Comedy</item>
         <item>Music</item>
@@ -124,4 +129,9 @@
         <item>News</item>
         <item>Other</item>
     </string-array>
+    <string name="title_activity_watch_video" />
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

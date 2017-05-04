@@ -18,7 +18,7 @@ namespace ImgProcess
         public static void GenerateThumbnail(
         [QueueTrigger("thumbnailrequest")] BlobInformation blobInfo,
         [Blob("{ProfileId}/{BlobName}", FileAccess.Read)] Stream input,
-        [Blob("{ProfileId}/{BlobNameWithoutExtension}_thumbnail.jpg")] CloudBlockBlob outputBlob)
+        [Blob("{ProfileId}/{BlobName}_impvid.mp4")] CloudBlockBlob outputBlob)
         {
             using (Stream output = outputBlob.OpenWrite())
             {
@@ -47,7 +47,6 @@ namespace ImgProcess
             int width;
             int height;
             var originalImage = new Bitmap(input);
-
             if (originalImage.Width > originalImage.Height)
             {
                 width = thumbnailsize;

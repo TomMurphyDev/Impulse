@@ -6,6 +6,9 @@
     },
     {
       "filePath": "../ImgProcess/ImgProcess.csproj"
+    },
+    {
+      "filePath": "../VideoProcess/VideoProcess.csproj"
     }
   ]
 }

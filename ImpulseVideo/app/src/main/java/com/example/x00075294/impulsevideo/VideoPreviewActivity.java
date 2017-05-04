@@ -2,6 +2,7 @@ package com.example.x00075294.impulsevideo;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -44,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import Model.BlobInformation;
 import Model.Profile;
 import Model.Video;
+import Model.VideoBlobInformation;
 
 import static com.example.x00075294.impulsevideo.LaunchActivity.SHAREDPREFFILE;
 import static com.example.x00075294.impulsevideo.LaunchActivity.TOKENPREF;
@@ -207,6 +209,12 @@ public class VideoPreviewActivity extends AppCompatActivity {
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
     }
+    private void loadMain() {
+        Log.v(TAG, "Insert passed");
+        Log.v(TAG, "Load main ..... ");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
     class uploadVideo extends AsyncTask<Video, Void, Void> {
         final SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         String profileId = prefs.getString(USERIDPREF, null);
@@ -240,7 +248,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
                 // Define the path to a local file.
                 Bundle extras = getIntent().getExtras();
                 Uri vidUri=  Uri.parse(extras.getString("videoUri"));
-                CloudBlockBlob blob = container.getBlockBlobReference(UUID.randomUUID().toString().toLowerCase());
+                CloudBlockBlob blob = container.getBlockBlobReference(UUID.randomUUID().toString().toLowerCase()+".mp4");
                 BlobContainerPermissions open = new BlobContainerPermissions();
                 open.setPublicAccess(BlobContainerPublicAccessType.BLOB);
                 container.uploadPermissions(open);
@@ -254,7 +262,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
                 CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
                 CloudQueue vidQ = queueClient.getQueueReference("videorequest");
                 vidQ.createIfNotExists();
-                BlobInformation convert = new BlobInformation(blob.getUri(),blob.getName(),profileId);
+                VideoBlobInformation convert = new VideoBlobInformation(blob.getUri(),blob.getName(),profileId,blob.getName());
                 CloudQueueMessage test = new CloudQueueMessage(new Gson().toJson(convert));
                 vidQ.addMessage(test);
                 SharedPreferences.Editor editor = prefs.edit();
@@ -263,6 +271,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
                 editor.apply();
                 try {
                     up =videos[0];
+                    up.setId(blob.getName());
                     up.setBlobUrl(vidUrl);
                     up.setProfileID(blob.getName());
                     mVideoTable.insert(up).get();
@@ -284,6 +293,8 @@ public class VideoPreviewActivity extends AppCompatActivity {
             {
                 Log.v(TAG, "Upload Completed :)");
                 pd.dismiss();
+                loadMain();
+                finish();
             }
         }
     }

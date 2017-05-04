@@ -69,21 +69,29 @@ namespace impulsevidService
                 new Profile { Id = "999999", Username = "Ghettoman"}
         
             };
-            context.SaveChanges();
-
             foreach (Profile p in profiles)
             {
                 context.Set<Profile>().Add(p);
             }
+            context.SaveChanges();
             List<Video> videos = new List<Video>
             {
                 new Video { Id = Guid.NewGuid().ToString(), Title = "First Video",ProfileID = "999999"}
 
             };
-
             foreach (Video v in videos)
             {
                 context.Set<Video>().Add(v);
+            }
+            context.SaveChanges();
+            List<Comment> comments = new List<Comment>
+            {
+                new Comment { Id = Guid.NewGuid().ToString(), VideoID = "First Video",ProfileID = "999999",CommentContent = "Hey You Guys"}
+
+            };
+            foreach (Comment c in comments)
+            {
+                context.Set<Comment>().Add(c);
             }
             context.SaveChanges();
             base.Seed(context);

@@ -24,6 +24,7 @@ namespace impulsevidService.Models
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Video> Videos { get; set;}
+        public DbSet<Comment> Comments { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(

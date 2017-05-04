@@ -1,4 +1,5 @@
 package com.example.x00075294.impulsevideo;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -70,11 +71,11 @@ public class ProfileActivity extends AppCompatActivity {
         * */
     private static final String TAG = "IMP:Profile -->: ";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final String IMAGELOCAL ="prof";
-    private static final String BlOB_CONN ="DefaultEndpointsProtocol=https;AccountName=impstaging;AccountKey=1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==;EndpointSuffix=core.windows.net;";
-    private static final String BlOB_KEY ="1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==";
+    private static final String IMAGELOCAL = "prof";
+    private static final String BlOB_CONN = "DefaultEndpointsProtocol=https;AccountName=impstaging;AccountKey=1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==;EndpointSuffix=core.windows.net;";
+    private static final String BlOB_KEY = "1BDdeZYFU+DLLrMLaHwcqPcSdzPT20rASvuZZ3wsVWxdq3SGJjZL2Xt4ACiaIiwvRgQfHyiJrz2YFgfGNyaWvg==";
     private static final String BLOB_NAME = "impstaging;";
-    public static final String storageConnectionString = BlOB_CONN+ BLOB_NAME+BlOB_KEY;
+    public static final String storageConnectionString = BlOB_CONN + BLOB_NAME + BlOB_KEY;
     private MobileServiceTable<Profile> mProfileTable;
     private Bitmap bm;
     /*
@@ -85,11 +86,13 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText uName;
     private EditText loca;
     private EditText bio;
+    private String imgUrl;
+
     /**
      * On create called when activity is created provides initial connection to app service
      * and layout inflation
      * assigns on click properties to ui elements
-     * **/
+     **/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,13 +143,13 @@ public class ProfileActivity extends AppCompatActivity {
             mProfileTable = mClient.getTable(Profile.class);
             //load the verified user from google sign in
             if (loadUserTokenCache(mClient)) {
-                Log.v(TAG, "Found Previous Login");
+                Log.v(TAG, "Connecting");
             }
             //download user profile details and add to acreen
         } catch (MalformedURLException e) {
             Log.v(TAG, "MAlformed Url");
             //createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
-        } catch (Exception e){
+        } catch (Exception e) {
             //createAndShowDialog(e, "Error");
             Log.v(TAG, "General Error");
         }
@@ -154,23 +157,13 @@ public class ProfileActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         String imageId = prefs.getString(IMAGELOCAL, null);
         String profileId = prefs.getString(USERIDPREF, null);
-        if(profileId != null) {
+        if (profileId != null) {
             profileId = profileId.substring(4);
-            Log.v(TAG, "here it falls down "+profileId);
+            Log.v(TAG, "here it falls down " + profileId);
         }
         //custom imageview for circular framed images
         CircleImageView prof = (CircleImageView) findViewById(R.id.profile_image);
-        if(imageId != null)
-        {
-            Uri imgUri = Uri.parse(imageId);
-            try {
-                bm = getBitmapFromUri(imgUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Log.v(TAG,  "To here " + imgUri.toString());
-        }
-        prof.setImageBitmap(bm);
+
         // assign upload button on click
         upload = (Button) findViewById(R.id.imageButton);
         final String finalProfileId = profileId;
@@ -178,12 +171,12 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Perform action on click
                 // validate form using validateForm() method
-                if(validateForm()){
+                if (validateForm()) {
                     String userName = uName.getText().toString();
                     String location = loca.getText().toString();
                     String bi = bio.getText().toString();
                     //temp final variable for uploading to
-                    Profile p = new Profile(finalProfileId,userName,location,bi);
+                    Profile p = new Profile(finalProfileId, userName, location, bi);
                     new uploadProfilePhoto().execute(p);
                 }
             }
@@ -203,6 +196,7 @@ public class ProfileActivity extends AppCompatActivity {
         client.setCurrentUser(user);
         return true;
     }
+
     /**
      * Fires an intent to spin up the "file chooser" UI and select an image.
      */
@@ -216,8 +210,7 @@ public class ProfileActivity extends AppCompatActivity {
                             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                             | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
                             | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-        }
-        else{
+        } else {
             intent.addFlags(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -233,6 +226,7 @@ public class ProfileActivity extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
+
     private Bitmap getBitmapFromUri(Uri uri) throws IOException {
         ParcelFileDescriptor parcelFileDescriptor =
                 getContentResolver().openFileDescriptor(uri, "r");
@@ -240,6 +234,30 @@ public class ProfileActivity extends AppCompatActivity {
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
+    }
+    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -253,7 +271,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.v(TAG, String.valueOf(bitmap));
                 SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(IMAGELOCAL,uri.toString());
+                editor.putString(IMAGELOCAL, uri.toString());
                 editor.commit();
                 CircleImageView profile = (CircleImageView) findViewById(R.id.profile_image);
                 profile.setImageBitmap(bitmap);
@@ -262,15 +280,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     }
+
     public Bitmap loadImage(Uri in) throws IOException {
         return MediaStore.Images.Media.getBitmap(getContentResolver(), in);
     }
+
     private boolean validateForm() {
         boolean valid = true;
         String userName = uName.getText().toString();
         String location = loca.getText().toString();
         String bi = bio.getText().toString();
-        if (userName.isEmpty() || userName.length() <4) {
+        if (userName.isEmpty() || userName.length() < 4) {
             uName.setError("Must Not be Empty or less than 4 characters!");
             valid = false;
         } else {
@@ -297,6 +317,7 @@ public class ProfileActivity extends AppCompatActivity {
         String profileId = prefs.getString(USERIDPREF, null);
         String profUrl;
         ProgressDialog pd;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -304,15 +325,15 @@ public class ProfileActivity extends AppCompatActivity {
             pd.setMessage("loading");
             pd.show();
         }
+
         @Override
         protected Void doInBackground(Profile... profiles) {
             Profile p;
-            if(profileId != null) {
+            if (profileId != null) {
                 profileId = profileId.substring(4);
             }
             // Do your request
-            try
-            {
+            try {
                 // Retrieve storage account from connection-string.
                 CloudStorageAccount storageAccount = CloudStorageAccount.parse(BlOB_CONN);
                 // Create the blob client.
@@ -323,32 +344,32 @@ public class ProfileActivity extends AppCompatActivity {
                 // Create the container if it does not exist.
                 container.createIfNotExists();
                 // Define the path to a local file.
-                final String filePath = prefs.getString(IMAGELOCAL,null);
+                final String filePath = prefs.getString(IMAGELOCAL, null);
                 // Create or overwrite the "myimage.jpg" blob with contents from a local file.
                 CloudBlockBlob blob = container.getBlockBlobReference("profileImg.jpeg"); // "file:///mnt/sdcard/FileName.mp3"
                 BlobContainerPermissions open = new BlobContainerPermissions();
                 open.setPublicAccess(BlobContainerPublicAccessType.BLOB);
                 container.uploadPermissions(open);
-                Log.v(TAG, "Uploading file to " +container.getName()+ "");
+                Log.v(TAG, "Uploading file to " + container.getName() + "");
                 Uri vidPath = Uri.parse(filePath);
-                InputStream fileInputStream=getBaseContext().getContentResolver().openInputStream(vidPath);
+                InputStream fileInputStream = getBaseContext().getContentResolver().openInputStream(vidPath);
                 //File source = new FilefromUri(path);
-                blob.upload(fileInputStream,fileInputStream.available());
+                blob.upload(fileInputStream, fileInputStream.available());
                 profUrl = blob.getUri().toURL().toString();
                 Log.v(TAG, "Located at " + blob.getUri().toURL().toString());
 
                 CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
                 CloudQueue imgQ = queueClient.getQueueReference("thumbnailrequest");
                 imgQ.createIfNotExists();
-                BlobInformation convert = new BlobInformation(blob.getUri(),blob.getName(),profileId);
+                BlobInformation convert = new BlobInformation(blob.getUri(), blob.getName(), profileId);
                 CloudQueueMessage test = new CloudQueueMessage(new Gson().toJson(convert));
                 imgQ.addMessage(test);
                 SharedPreferences.Editor editor = prefs.edit();
                 String IMAGEBlOB = "blob";
-                editor.putString(IMAGEBlOB,blob.getUri().toString());
+                editor.putString(IMAGEBlOB, blob.getUri().toString());
                 editor.apply();
                 try {
-                    p =profiles[0];
+                    p = profiles[0];
                     p.setUrl(profUrl);
                     mProfileTable.update(p).get();
                 } catch (InterruptedException e) {
@@ -356,27 +377,27 @@ public class ProfileActivity extends AppCompatActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 // Output the stack trace.
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (pd != null)
-            {
+            if (pd != null) {
                 Log.v(TAG, "Upload Completed :)");
                 pd.dismiss();
             }
         }
     }
+
     class LoadProfileDetails extends AsyncTask<Void, Void, Void> {
         ProgressDialog pd;
         Profile lookup;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -384,40 +405,41 @@ public class ProfileActivity extends AppCompatActivity {
             pd.setMessage("loading");
             pd.show();
         }
+
         @Override
         protected Void doInBackground(Void... params) {
             SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
             String profileId = prefs.getString(USERIDPREF, null);
-            if(profileId != null) {
+            if (profileId != null) {
                 profileId = profileId.substring(4);
             }
             // Do your request
-            try
-            {
+            try {
                 lookup = mProfileTable.lookUp(profileId).get();
 
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 // Output the stack trace.
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (pd != null)
-            {
-                if(lookup!= null)
-                {
+            if (pd != null) {
+                if (lookup != null) {
                     uName.setText(lookup.getUsername(), TextView.BufferType.EDITABLE);
                     loca.setText(lookup.getLocation(), TextView.BufferType.EDITABLE);
                     bio.setText(lookup.getBio(), TextView.BufferType.EDITABLE);
-                    Log.v(TAG, "Download Completed :)");
-                }
-                else
-                {
+                    imgUrl = lookup.getUrl();
+                    if(imgUrl != null)
+                    {
+                        new DownloadImageTask((ImageView) findViewById(R.id.profile_image))
+                                .execute(imgUrl);
+                        Log.v(TAG, "Download Completed :)");
+                    }
+                } else {
                     uName.setText("profilenotfoud");
                 }
                 pd.dismiss();

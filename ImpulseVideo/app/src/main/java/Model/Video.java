@@ -49,7 +49,9 @@ public class Video {
         Title = ti;
         Description = desc;
     }
-
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getTitle() {
         return Title;
     }

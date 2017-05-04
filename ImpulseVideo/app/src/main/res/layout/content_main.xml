@@ -13,4 +13,10 @@
     tools:context="com.example.x00075294.impulsevideo.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:entries="@array/spinnerItems"
+        android:id="@+id/resultlist" />
+
 </RelativeLayout>

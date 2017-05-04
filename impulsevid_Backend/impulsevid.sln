@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "impulsevidService", "impuls
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImgProcess", "ImgProcess\ImgProcess.csproj", "{6AD50E14-B875-4961-AD99-EFF818FAEBD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoProcess", "VideoProcess\VideoProcess.csproj", "{1CECED8C-FEC0-45D6-A7A5-58401485DF59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{6AD50E14-B875-4961-AD99-EFF818FAEBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AD50E14-B875-4961-AD99-EFF818FAEBD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AD50E14-B875-4961-AD99-EFF818FAEBD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CECED8C-FEC0-45D6-A7A5-58401485DF59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CECED8C-FEC0-45D6-A7A5-58401485DF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CECED8C-FEC0-45D6-A7A5-58401485DF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CECED8C-FEC0-45D6-A7A5-58401485DF59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
 	EndGlobalSection
 EndGlobal
