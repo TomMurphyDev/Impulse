@@ -38,7 +38,7 @@ namespace VideoProcess
         [Blob("{ProfileId}/{BlobName}", FileAccess.Read)] Stream input, TextWriter log)
         {
             VideoBlobInformation b = blobInfo;
-            string s = ConvertAndPrepareVideo(b, input,log);
+            string[] s = ConvertAndPrepareVideo(b, input,log);
 
             // Entity Framework context class is not thread-safe, so it must
             // be instantiated and disposed within the function.
@@ -48,9 +48,11 @@ namespace VideoProcess
                 Video ad = db.Videos.Find(id);
                 if (ad == null)
                 {
-                    throw new Exception(String.Format("AdId {0} not found, can't create thumbnail", id.ToString()));
+                    throw new Exception(String.Format("AdId {0} not found, can't create db entry", id.ToString()));
                 }
-                ad.StreamUrl=s;
+                ad.StreamUrl=s[0];
+                ad.ThumbUrl = s[1];
+                ad.Available = true;
                 db.SaveChanges();
             }
         }
@@ -67,15 +69,15 @@ namespace VideoProcess
         {
             // Declare a new job.
             IJob job = context.Jobs.Create("Media Encoder Standard Job");
+            string configuration = File.ReadAllText("config.xml");
             // Get a media processor reference, and pass to it the name of the 
             // processor to use for the specific task.
             IMediaProcessor processor = GetLatestMediaProcessorByName("Media Encoder Standard");
-
             // Create a task with the encoding details, using a string preset.
             // In this case "Adaptive Streaming" preset is used.
             ITask task = job.Tasks.AddNew("My encoding task",
                 processor,
-                "Adaptive Streaming",
+                configuration,
                 TaskOptions.None);
 
             // Specify the input asset to be encoded.
@@ -85,7 +87,6 @@ namespace VideoProcess
             // means the output asset is not encrypted. 
             task.OutputAssets.AddNew("Output asset",
                 AssetCreationOptions.None);
-
             job.StateChanged += new EventHandler<JobStateChangedEventArgs>(JobStateChanged);
             job.Submit();
             job.GetExecutionProgressTask(CancellationToken.None).Wait();
@@ -122,7 +123,7 @@ namespace VideoProcess
                     break;
             }
         }
-        public static string ConvertAndPrepareVideo(VideoBlobInformation info, Stream input, TextWriter log)
+        public static string[] ConvertAndPrepareVideo(VideoBlobInformation info, Stream input, TextWriter log)
         {
             context = new CloudMediaContext(new MediaServicesCredentials(
                             accName,
@@ -191,6 +192,7 @@ namespace VideoProcess
             var accessPolicy = context.AccessPolicies.Create(streamingAsset.Name, TimeSpan.FromDays(daysForWhichStreamingUrlIsActive),
                                                      AccessPermissions.Read);
             string streamingUrl = string.Empty;
+            var thumbUrl = string.Empty;
             var assetFiles = streamingAsset.AssetFiles.ToList();
             var streamingAssetFile = assetFiles.Where(f => f.Name.ToLower().EndsWith("m3u8-aapl.ism")).FirstOrDefault();
             if (streamingAssetFile != null)
@@ -210,6 +212,15 @@ namespace VideoProcess
                 log.WriteLine("Streaming Url SMooth: " + streamingUrl);
 
             }
+            streamingAssetFile = assetFiles.Where(f => f.Name.ToLower().EndsWith(".bmp")).FirstOrDefault();
+            if (string.IsNullOrEmpty(thumbUrl) && streamingAssetFile != null)
+            {
+                var locator = context.Locators.CreateLocator(LocatorType.OnDemandOrigin, streamingAsset, accessPolicy);
+                var mp4Uri = new UriBuilder(locator.Path);
+                mp4Uri.Path += streamingAssetFile.Name;
+                thumbUrl = mp4Uri.ToString();
+                log.WriteLine("prog down Url:  Url " + thumbUrl);
+            }
             streamingAssetFile = assetFiles.Where(f => f.Name.ToLower().EndsWith(".mp4")).FirstOrDefault();
             if (string.IsNullOrEmpty(streamingUrl) && streamingAssetFile != null)
             {
@@ -217,11 +228,14 @@ namespace VideoProcess
                 var mp4Uri = new UriBuilder(locator.Path);
                 mp4Uri.Path += "/" + streamingAssetFile.Name;
                 streamingUrl = mp4Uri.ToString();
-                log.WriteLine("Streaming Url:  Url " + streamingUrl);
+                log.WriteLine("prog down Url:  Url " + streamingUrl);
             }
             log.WriteLine("Streaming Url: " + streamingUrl);
             log.WriteLine("Done");
-            return streamingUrl;
+            string[] res = new string[2];
+            res[0] = streamingUrl;
+            res[1] = thumbUrl;
+            return res;
         }
     }
 }

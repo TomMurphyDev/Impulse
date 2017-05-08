@@ -49,6 +49,13 @@ public class Video {
         Title = ti;
         Description = desc;
     }
+
+    public Video(String ti, String desc, String category) {
+        Title = ti;
+        Category = category;
+        Description = desc;
+    }
+
     public void setId(String id) {
         this.id = id;
     }

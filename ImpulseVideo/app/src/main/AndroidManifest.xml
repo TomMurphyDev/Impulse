@@ -55,6 +55,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.x00075294.impulsevideo.MainActivity" />
         </activity>
+        <activity
+            android:name=".ViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_view"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.x00075294.impulsevideo.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

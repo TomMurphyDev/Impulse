@@ -5,6 +5,18 @@ package Model;
  */
 
 public class Profile{
+    public String getId() {
+        return id;
+    }
+
+    public String getProfileUrl() {
+        return ProfileUrl;
+    }
+
+    public String getThumbnailUrl() {
+        return ThumbnailUrl;
+    }
+
     @com.google.gson.annotations.SerializedName("id")
     private String id;
     @com.google.gson.annotations.SerializedName("username")

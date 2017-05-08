@@ -161,3 +161,4 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Releas
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.csprojResolveAssemblyReference.cache
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.exe
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.pdb
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\config.xml

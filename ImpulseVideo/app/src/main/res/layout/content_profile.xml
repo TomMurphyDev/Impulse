@@ -70,9 +70,9 @@
             android:layout_weight="1"
             android:textStyle="normal|bold"
             android:textSize="30sp"
-            android:shadowColor="@color/colorAccent"
+            android:shadowColor="@color/accent"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/cardview_light_background" />
+            android:textColor="@color/primary_text" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

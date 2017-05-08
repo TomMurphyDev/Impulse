@@ -99,7 +99,8 @@ public class VideoPreviewActivity extends AppCompatActivity {
                     //temp final variable for uploading to
                     String ti = title.getText().toString();
                     String desc = description.getText().toString();
-                    Video up = new Video(ti,desc);
+                    String category = cat.getSelectedItem().toString();
+                    Video up = new Video(ti,desc,category);
                     new uploadVideo().execute(up);
                 }
             }
@@ -273,7 +274,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
                     up =videos[0];
                     up.setId(blob.getName());
                     up.setBlobUrl(vidUrl);
-                    up.setProfileID(blob.getName());
+                    up.setProfileID(profileId);
                     mVideoTable.insert(up).get();
                 } catch (InterruptedException e) {
                     Log.v(TAG, e.getMessage());

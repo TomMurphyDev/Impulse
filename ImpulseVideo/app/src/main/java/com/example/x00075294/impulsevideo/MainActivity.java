@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.test.ActivityTestCase;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -32,6 +34,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.net.MalformedURLException;
@@ -39,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import Model.Profile;
@@ -56,13 +60,14 @@ public class MainActivity extends AppCompatActivity
     private static final int MY_PERMISSIONS_REQUEST_USE_CAMERA = 101;
     // --Commented out by Inspection (17/04/2017 23:26):private static final int MY_PERMISSIONS_WRITE_STORAGE = 102;
     private static final int REQUEST_VIDEO_CAPTURE = 1;
+    private static MobileServiceTable<Profile> mProfileTable;
     private MobileServiceTable<Video> mVideoTable;
     List<Video> results;
 
     @Override
     protected void onStart() {
         super.onStart();
-        new LoadVideoDetails().execute();
+        new LoadVideoDetails().execute("");
     }
 
     /**
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity
             });
             //local copy of table for manipulations to be performed on
             mVideoTable = mClient.getTable(Video.class);
+            mProfileTable = mClient.getTable(Profile.class);
             //load the verified user from google sign in
             if (loadUserTokenCache(mClient)) {
                 Log.v(TAG, "Connecting");
@@ -257,15 +263,27 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             loadProfile();
         } else if (id == R.id.nav_my_videos) {
-            loadVideo();
+            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+            String userId = prefs.getString(USERIDPREF, null);
+            userId = userId.substring(4);
+            new LoadMyVideos().execute(userId);
         } else if (id == R.id.nav_trends) {
-
+            new LoadVideoDetails().execute("");
         } else if (id == R.id.nav_Analytics) {
 
         } else if (id == R.id.nav_comedy) {
-
+            new LoadVideoDetails().execute("comedy");
         } else if (id == R.id.nav_music) {
-
+            new LoadVideoDetails().execute("music");
+        }
+        else if (id == R.id.nav_news) {
+            new LoadVideoDetails().execute("news");
+        }
+        else if (id == R.id.nav_sport) {
+            new LoadVideoDetails().execute("sport");
+        }
+        else if (id == R.id.nav_other) {
+            new LoadVideoDetails().execute("other");
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -274,6 +292,7 @@ public class MainActivity extends AppCompatActivity
 
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
@@ -305,10 +324,29 @@ public class MainActivity extends AppCompatActivity
             loadPreview(videoUri);
         }
     }
-    class LoadVideoDetails extends AsyncTask<Void, Void, Void> {
+    class LoadMyVideos extends AsyncTask<String, Void, Void> {
         ProgressDialog pd;
         Profile lookup;
 
+        @Override
+        protected Void doInBackground(String... strings) {
+            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+            String profileId = prefs.getString(USERIDPREF, null);
+            if (profileId != null) {
+                profileId = profileId.substring(4);
+            }
+                try {
+                    results = mVideoTable
+                            .where()
+                            .field("profileID").eq(strings[0]).and().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
+                            .execute()
+                            .get();
+                } catch (Exception e) {
+                    // Output the stack trace.
+                    e.printStackTrace();
+                }
+            return null;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -317,25 +355,93 @@ public class MainActivity extends AppCompatActivity
             pd.show();
         }
 
+
         @Override
-        protected Void doInBackground(Void... params) {
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            Log.v(TAG,"Found " + results.size() + " Videos");
+            populateVideoList(results);
+            pd.dismiss();
+        }
+    }
+    public class LoadProfile extends AsyncTask<String,Void,Profile> {
+        TextView t;
+        Profile lookup;
+        public LoadProfile(TextView p)
+        {
+            this.t = p;
+        }
+        @Override
+        protected Profile doInBackground(String... strings) {
+            try {
+                lookup = mProfileTable.lookUp(strings[0]).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Profile profile) {
+            super.onPostExecute(profile);
+            if (lookup!= null) {
+                t.setText(lookup.getUsername());
+            }
+        }
+    }
+    class LoadVideoDetails extends AsyncTask<String, Void, Void> {
+        ProgressDialog pd;
+
+
+        @Override
+        protected Void doInBackground(String... strings) {
             SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
             String profileId = prefs.getString(USERIDPREF, null);
             if (profileId != null) {
                 profileId = profileId.substring(4);
             }
-            // Do your request
-            try {
-                 results = mVideoTable
-                        .where()
-                        .execute()
-                        .get();
-            } catch (Exception e) {
-                // Output the stack trace.
-                e.printStackTrace();
+            if (strings[0].isEmpty()) {
+                // Do your request
+                try {
+                    results = mVideoTable
+                            .where().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
+                            .execute()
+                            .get();
+                } catch (Exception e) {
+                    // Output the stack trace.
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                try {
+                    results = mVideoTable
+                            .where()
+                            .field("category").eq(strings[0]).and().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
+                            .execute()
+                            .get();
+                } catch (Exception e) {
+                    // Output the stack trace.
+                    e.printStackTrace();
+                }
             }
             return null;
         }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("loading");
+            pd.show();
+        }
+
 
         @Override
         protected void onPostExecute(Void result) {
