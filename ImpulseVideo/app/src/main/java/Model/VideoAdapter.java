@@ -1,39 +1,24 @@
 package Model;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.x00075294.impulsevideo.MainActivity;
-import com.example.x00075294.impulsevideo.ProfileActivity;
 import com.example.x00075294.impulsevideo.R;
-import com.example.x00075294.impulsevideo.VideoPreviewActivity;
 import com.example.x00075294.impulsevideo.ViewActivity;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Video;
-import static com.example.x00075294.impulsevideo.LaunchActivity.SHAREDPREFFILE;
-import static com.example.x00075294.impulsevideo.LaunchActivity.USERIDPREF;
-import static com.example.x00075294.impulsevideo.ProfileActivity.*;
+
 /**
  * Created by Thomas Murphy on 03/04/2017.
  */
@@ -42,7 +27,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
     private static final String TAG = "IMP: List Loader";
     private String[] imageURLArray;
     public List<Video> vids;
-    public Context mContext;
+    private Context mContext;
     public VideoAdapter(Context context, int resource, List<Video> objects) {
         super(context, resource, objects);
     }
@@ -55,10 +40,15 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         Log.v(TAG, "Load preview ..... ");
         Intent intent = new Intent(mContext, ViewActivity.class);
         intent.putExtra("videoUri", v.getStreamUrl());
+        intent.putExtra("title",v.getTitle());
+        intent.putExtra("desc",v.getDescription());
+        intent.putExtra("prof",v.getProfileID());
+        intent.putExtra("vidId",v.getId());
         mContext.startActivity(intent);
     }
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
         final Video vid = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -75,6 +65,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
             TextView prof = (TextView) convertView.findViewById(R.id.prof);
             ImageView thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
             //load image directly
+            assert vid != null;
             if(vid.getThumbUrl() != null)
             {
                 Picasso.with(getContext()).load(vid.getThumbUrl()).into(thumbnail);

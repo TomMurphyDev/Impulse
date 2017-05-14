@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.test.ActivityTestCase;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,7 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +34,24 @@ import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 import com.squareup.okhttp.OkHttpClient;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.http.NextServiceFilterCallback;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.query.Query;
+import com.microsoft.windowsazure.mobileservices.table.query.QueryOperations;
+import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncContext;
+import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncTable;
+import com.microsoft.windowsazure.mobileservices.table.sync.localstore.ColumnDataType;
+import com.microsoft.windowsazure.mobileservices.table.sync.localstore.MobileServiceLocalStoreException;
+import com.microsoft.windowsazure.mobileservices.table.sync.localstore.SQLiteLocalStore;
+import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSyncHandler;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -52,7 +68,6 @@ import Model.VideoAdapter;
 import static com.example.x00075294.impulsevideo.LaunchActivity.SHAREDPREFFILE;
 import static com.example.x00075294.impulsevideo.LaunchActivity.TOKENPREF;
 import static com.example.x00075294.impulsevideo.LaunchActivity.USERIDPREF;
-import static com.example.x00075294.impulsevideo.R.string.bio;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_VIDEO_CAPTURE = 1;
     private static MobileServiceTable<Profile> mProfileTable;
     private MobileServiceTable<Video> mVideoTable;
-    List<Video> results;
+    private List<Video> results;
 
     @Override
     protected void onStart() {
@@ -194,6 +209,7 @@ public class MainActivity extends AppCompatActivity
 
                 // Check for ACCESS_FINE_LOCATION
 
+                //noinspection StatementWithEmptyBody
                 if (perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 
                         && perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
@@ -265,6 +281,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_my_videos) {
             SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
             String userId = prefs.getString(USERIDPREF, null);
+            assert userId != null;
             userId = userId.substring(4);
             new LoadMyVideos().execute(userId);
         } else if (id == R.id.nav_trends) {
@@ -330,11 +347,6 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(String... strings) {
-            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
-            String profileId = prefs.getString(USERIDPREF, null);
-            if (profileId != null) {
-                profileId = profileId.substring(4);
-            }
                 try {
                     results = mVideoTable
                             .where()
@@ -365,7 +377,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
     public class LoadProfile extends AsyncTask<String,Void,Profile> {
-        TextView t;
+        final TextView t;
         Profile lookup;
         public LoadProfile(TextView p)
         {
@@ -375,9 +387,7 @@ public class MainActivity extends AppCompatActivity
         protected Profile doInBackground(String... strings) {
             try {
                 lookup = mProfileTable.lookUp(strings[0]).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
             return null;
@@ -398,15 +408,8 @@ public class MainActivity extends AppCompatActivity
     }
     class LoadVideoDetails extends AsyncTask<String, Void, Void> {
         ProgressDialog pd;
-
-
         @Override
         protected Void doInBackground(String... strings) {
-            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
-            String profileId = prefs.getString(USERIDPREF, null);
-            if (profileId != null) {
-                profileId = profileId.substring(4);
-            }
             if (strings[0].isEmpty()) {
                 // Do your request
                 try {

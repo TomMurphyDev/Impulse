@@ -8,21 +8,21 @@ public class Video {
     @com.google.gson.annotations.SerializedName("id")
     private String id;
     @com.google.gson.annotations.SerializedName("title")
-    public String Title;
+    private String Title;
     @com.google.gson.annotations.SerializedName("category")
-    public String Category;
+    private String Category;
     @com.google.gson.annotations.SerializedName("description")
-    public String Description;
+    private String Description;
     @com.google.gson.annotations.SerializedName("available")
-    public boolean Available;
+    private boolean Available;
     @com.google.gson.annotations.SerializedName("profileID")
-    public String ProfileID;
+    private String ProfileID;
     @com.google.gson.annotations.SerializedName("blobUrl")
-    public String BlobUrl ;
+    private String BlobUrl ;
     @com.google.gson.annotations.SerializedName("streamUrl")
-    public String StreamUrl;
+    private String StreamUrl;
     @com.google.gson.annotations.SerializedName("thumbUrl")
-    public String ThumbUrl ;
+    private String ThumbUrl ;
 
     public Video(String id, String title, String category, String description, boolean available, String profileID, String blobUrl, String streamUrl, String thumbUrl) {
         this.id = id;
@@ -54,6 +54,10 @@ public class Video {
         Title = ti;
         Category = category;
         Description = desc;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {

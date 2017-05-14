@@ -6,11 +6,11 @@ import java.net.URI;
  * Created by Thomas Murphy on 26/04/2017.
  */
 public class VideoBlobInformation {
-    public URI BlobUri;
-    public String BlobName;
-    public String BlobNameWithoutExtension;
-    public String ProfileId;
-    public String VideoId;
+    private URI BlobUri;
+    private String BlobName;
+    private String BlobNameWithoutExtension;
+    private String ProfileId;
+    private String VideoId;
 
     public VideoBlobInformation(URI blobUri, String blobName, String profileId, String videoId) {
         BlobUri = blobUri;

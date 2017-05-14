@@ -1,7 +1,5 @@
 package Model;
 
-import android.net.Uri;
-
 import java.net.URI;
 
 /**
@@ -9,10 +7,10 @@ import java.net.URI;
  */
 
 public class BlobInformation {
-    public URI BlobUri;
-    public String BlobName;
-    public String BlobNameWithoutExtension;
-    public String ProfileId;
+    private URI BlobUri;
+    private String BlobName;
+    private String BlobNameWithoutExtension;
+    private String ProfileId;
 
     public BlobInformation(URI blobUri, String blobName, String profileId) {
         BlobUri = blobUri;

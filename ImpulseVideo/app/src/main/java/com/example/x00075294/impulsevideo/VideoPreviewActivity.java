@@ -39,11 +39,8 @@ import com.squareup.okhttp.OkHttpClient;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import Model.BlobInformation;
-import Model.Profile;
 import Model.Video;
 import Model.VideoBlobInformation;
 
@@ -65,8 +62,9 @@ public class VideoPreviewActivity extends AppCompatActivity {
     *ui elements to manipulate
     * Handlers
      */
-    EditText title,description;
-    Spinner cat;
+    private EditText title;
+    private EditText description;
+    private Spinner cat;
     /**
      * On create called when activity is created provides initial connection to app service
      * and layout inflation
@@ -146,6 +144,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
         }
         else{
             fab.setVisibility(View.INVISIBLE);
+            //noinspection deprecation
             Snackbar.make(parentLayout, "No Internet Connection please check Settings", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Reload", new View.OnClickListener() {
                         @Override
@@ -256,6 +255,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
                 Log.v(TAG, "Uploading file to " +container.getName()+ "");
                 InputStream fileInputStream=getBaseContext().getContentResolver().openInputStream(vidUri);
                 //File source = new FilefromUri(path);
+                assert fileInputStream != null;
                 blob.upload(fileInputStream,fileInputStream.available());
                 vidUrl = blob.getUri().toURL().toString();
                 Log.v(TAG, "Located at " + blob.getUri().toURL().toString());
