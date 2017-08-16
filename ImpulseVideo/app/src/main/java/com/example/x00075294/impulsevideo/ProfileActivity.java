@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.v(TAG, " Succesful Activity start run ui");
-        new LoadProfileDetails().execute();
     }
 
     /*

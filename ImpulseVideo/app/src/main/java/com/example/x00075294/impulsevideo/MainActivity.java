@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ import com.microsoft.windowsazure.mobileservices.table.sync.localstore.ColumnDat
 import com.microsoft.windowsazure.mobileservices.table.sync.localstore.MobileServiceLocalStoreException;
 import com.microsoft.windowsazure.mobileservices.table.sync.localstore.SQLiteLocalStore;
 import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSyncHandler;
+import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -77,7 +80,10 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_VIDEO_CAPTURE = 1;
     private static MobileServiceTable<Profile> mProfileTable;
     private MobileServiceTable<Video> mVideoTable;
-    private List<Video> results;
+    private List<Video> results = null;
+    private TextView thumbName;
+    private TextView thumbLoc;
+    private ImageView thumbnail;
 
     @Override
     protected void onStart() {
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity
             //createAndShowDialog(e, "Error");
             Log.v(TAG, "General Error");
         }
+        new LoadProfileDetails().execute();
     }
     private boolean loadUserTokenCache(MobileServiceClient client) {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
@@ -264,6 +271,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            getApplicationContext().getSharedPreferences(SHAREDPREFFILE,0).edit().clear().commit();
+            finish();
             return true;
         }
 
@@ -333,7 +342,9 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("videoUri", v.toString());
         startActivity(intent);
     }
-
+    private void loadThumb() {
+        Log.v(TAG, "Load Thumbs ..... ");
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
@@ -341,10 +352,54 @@ public class MainActivity extends AppCompatActivity
             loadPreview(videoUri);
         }
     }
+
+    class LoadProfileDetails extends AsyncTask<Void, Void, Void> {
+        Profile lookup;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+            String profileId = prefs.getString(USERIDPREF, null);
+            if (profileId != null) {
+                profileId = profileId.substring(4);
+            }
+            // Do your request
+            try {
+                lookup = mProfileTable.lookUp(profileId).get();
+            } catch (Exception e) {
+                // Output the stack trace.
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            thumbName = (TextView) findViewById(R.id.username_main_thumb);
+            thumbLoc = (TextView) findViewById(R.id.location_thumb);
+            thumbnail = (ImageView) findViewById(R.id.profile_main_thumb);
+                if (lookup != null) {
+                    thumbName.setText(lookup.getUsername());
+                    thumbLoc.setText(lookup.getLocation());
+                    String imgUrl = lookup.getThumbnailUrl();
+                    if(imgUrl != null)
+                    {
+                        Picasso.with(MainActivity.this).load(imgUrl).into(thumbnail);
+                        Log.v(TAG, "Download Completed :)");
+                    }
+                    if(imgUrl != null)
+                    {
+                        Log.v(TAG, "Download Completed :)");
+                    }
+                }
+        }
+    }
     class LoadMyVideos extends AsyncTask<String, Void, Void> {
         ProgressDialog pd;
-        Profile lookup;
-
         @Override
         protected Void doInBackground(String... strings) {
                 try {
@@ -371,7 +426,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            Log.v(TAG,"Found " + results.size() + " Videos");
+            Log.v(TAG,"Post Found " + results.size() + " Videos");
             populateVideoList(results);
             pd.dismiss();
         }
@@ -410,6 +465,7 @@ public class MainActivity extends AppCompatActivity
         ProgressDialog pd;
         @Override
         protected Void doInBackground(String... strings) {
+
             if (strings[0].isEmpty()) {
                 // Do your request
                 try {
@@ -430,6 +486,10 @@ public class MainActivity extends AppCompatActivity
                             .field("category").eq(strings[0]).and().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
                             .execute()
                             .get();
+                    Log.v(TAG,"Found " + results.size() + " Videos");
+                    for (Video v:results) {
+                        Log.v(TAG,"HERE!!!!!!!!!! " + v.getStreamUrl() + " Videos");
+                    }
                 } catch (Exception e) {
                     // Output the stack trace.
                     e.printStackTrace();
@@ -449,8 +509,10 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            Log.v(TAG,"Found " + results.size() + " Videos");
-            populateVideoList(results);
+            if(results != null){
+                Log.v(TAG,"Found " + results.size() + " Videos");
+                populateVideoList(results);
+            }
                 pd.dismiss();
             }
         }

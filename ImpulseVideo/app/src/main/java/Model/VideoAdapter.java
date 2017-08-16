@@ -1,7 +1,10 @@
 package Model;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,36 +53,49 @@ public class VideoAdapter extends ArrayAdapter<Video> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
+        View row = convertView;
         final Video vid = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_video, parent, false);
-            convertView.setOnClickListener(new AdapterView.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    loadPreview(vid);
-                }
-            });
-            TextView title = (TextView) convertView.findViewById(R.id.title_list);
-            TextView desc = (TextView) convertView.findViewById(R.id.list_desc);
-            TextView prof = (TextView) convertView.findViewById(R.id.prof);
-            ImageView thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
-            //load image directly
-            assert vid != null;
-            if(vid.getThumbUrl() != null)
-            {
-                Picasso.with(getContext()).load(vid.getThumbUrl()).into(thumbnail);
-                Log.v(TAG, "Download Completed :)");
-            }
-            Profile p = new Profile();
-            MainActivity t = new MainActivity();
-            t.new LoadProfile((TextView) convertView.findViewById(R.id.prof)).execute(vid.getProfileID());
-            title.setText(vid.getTitle());
-            desc.setText(vid.getDescription());
-            prof.setText(p.getUsername());
-        }
-        // Return the completed view to render on screen
-        return convertView;
-    }
 
+        VideoHolder holder = null;
+        // Check if an existing view is being reused, otherwise inflate the view
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            row = inflater.inflate(R.layout.item_video, parent, false);
+        }
+        row.setTag(vid);
+        row.setOnClickListener(new AdapterView.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                loadPreview(vid);
+            }
+        });
+        holder = new VideoHolder();
+        holder.title = (TextView) row.findViewById(R.id.title_list);
+        holder.desc = (TextView) row.findViewById(R.id.list_desc);
+        holder.prof = (TextView) row.findViewById(R.id.prof);
+        holder.thumbnail = (ImageView) row.findViewById(R.id.thumbnail);
+        //load image directly
+        assert vid != null;
+        if(vid.getThumbUrl() != null)
+        {
+            Picasso.with(getContext()).load(vid.getThumbUrl()).into(holder.thumbnail);
+            Log.v(TAG, "Download Completed :)");
+            Log.v(TAG,vid.getStreamUrl());
+        }
+        Profile p = new Profile();
+        MainActivity t = new MainActivity();
+        t.new LoadProfile((TextView) row.findViewById(R.id.prof)).execute(vid.getProfileID());
+        holder.title.setText(vid.getTitle());
+        holder.desc.setText(vid.getDescription());
+        holder.prof.setText(p.getUsername());
+        // Return the completed view to render on screen
+        return row;
+    }
+    static class VideoHolder
+    {
+        TextView title;
+        TextView desc;
+        TextView prof;
+        ImageView thumbnail;
+    }
 }

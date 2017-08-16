@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.example.x00075294.impulsevideo"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -36,7 +36,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.guava:guava:18.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile 'com.microsoft.azure:azure-mobile-android:3.2.0@aar'
+    compile 'com.microsoft.azure:azure-mobile-android:3.3.0@aar'
     compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@jar'
     compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
     compile 'com.microsoft.azure.android:azure-storage-android:1.0.0@aar'
