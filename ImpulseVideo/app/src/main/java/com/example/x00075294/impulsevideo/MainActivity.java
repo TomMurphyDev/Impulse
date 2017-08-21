@@ -2,6 +2,7 @@ package com.example.x00075294.impulsevideo;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
@@ -27,10 +29,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
@@ -68,6 +72,7 @@ import Model.Profile;
 import Model.Video;
 import Model.VideoAdapter;
 
+import static android.support.design.widget.Snackbar.*;
 import static com.example.x00075294.impulsevideo.LaunchActivity.SHAREDPREFFILE;
 import static com.example.x00075294.impulsevideo.LaunchActivity.TOKENPREF;
 import static com.example.x00075294.impulsevideo.LaunchActivity.USERIDPREF;
@@ -81,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     private static MobileServiceTable<Profile> mProfileTable;
     private MobileServiceTable<Video> mVideoTable;
     private List<Video> results = null;
+    private MobileServiceList<Video> searchVid = null;
+    private MobileServiceList<Profile> searchUser = null;
     private TextView thumbName;
     private TextView thumbLoc;
     private ImageView thumbnail;
@@ -155,8 +162,22 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             //createAndShowDialog(e, "Error");
             Log.v(TAG, "General Error");
+
         }
         new LoadProfileDetails().execute();
+        // Get the intent, verify the action and get the query
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            new Search().execute(query);
+            Log.v(TAG, "Search invoked");
+        }
+    }
+    @Override
+    public boolean onSearchRequested() {
+        return super.onSearchRequested();
+
+
     }
     private boolean loadUserTokenCache(MobileServiceClient client) {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
@@ -259,7 +280,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+
+        SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
+        SearchView searchView = (SearchView) menu.findItem( R.id.app_bar_search ).getActionView();
+        searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
+        return super.onCreateOptionsMenu( menu );
     }
 
     @Override
@@ -271,11 +296,12 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            getApplicationContext().getSharedPreferences(SHAREDPREFFILE,0).edit().clear().commit();
             finish();
             return true;
         }
-
+        if (id == R.id.app_bar_search) {
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -403,11 +429,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(String... strings) {
                 try {
-                    results = mVideoTable
-                            .where()
-                            .field("profileID").eq(strings[0]).and().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
-                            .execute()
-                            .get();
+                    results = mVideoTable.where().field("profileID").eq(strings[0]).and().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending).execute().get();
                 } catch (Exception e) {
                     // Output the stack trace.
                     e.printStackTrace();
@@ -421,8 +443,6 @@ public class MainActivity extends AppCompatActivity
             pd.setMessage("loading");
             pd.show();
         }
-
-
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -431,6 +451,85 @@ public class MainActivity extends AppCompatActivity
             pd.dismiss();
         }
     }
+    class Search extends AsyncTask<String, Void, Void> {
+        ProgressDialog pd;
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                //get al matches from oldest to newest
+                results = mVideoTable.where().startsWith("Title",strings[0]).orderBy("createdAt", QueryOrder.Ascending).execute().get();
+                //filter list to all that are contained
+                //as list is compiled it pushes newer videos to the top
+                for (Video v:results) {
+                    if(!v.getTitle().contains(strings[0]) && !v.getDescription().contains(strings[0]))
+                    {
+                        if(!v.getTitle().contains(strings[0]) || !v.getDescription().contains(strings[0])){
+                            results.remove(v);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // Output the stack trace.
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("loading");
+            pd.show();
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (results != null){
+                populateVideoList(results);
+            }
+            pd.dismiss();
+        }
+    }
+    // list item
+    public class FindProfile extends AsyncTask<Profile,Void,Profile> {
+        Profile lookup;
+        public FindProfile(Profile p)
+        {
+            this.lookup = p;
+        }
+        Profile res;
+        @Override
+        protected Profile doInBackground(Profile... profiles) {
+            try {
+                res = mProfileTable
+                        .lookUp(lookup.getId())
+                        .get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if(res.getUsername()!= null)
+            {
+                lookup = res;
+                return res;
+            }
+            else{
+                return null;
+            }
+        }
+        @Override
+        public void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Profile profile) {
+            super.onPostExecute(profile);
+
+        }
+    }
+    //manipulate a ui element
     public class LoadProfile extends AsyncTask<String,Void,Profile> {
         final TextView t;
         Profile lookup;
