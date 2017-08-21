@@ -33,6 +33,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.squareup.okhttp.OkHttpClient;
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.blob.*;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -157,6 +158,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        new LoadProfileDetails().execute();
     }
 
     private boolean loadUserTokenCache(MobileServiceClient client) {
@@ -211,30 +213,6 @@ public class ProfileActivity extends AppCompatActivity {
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
-    }
-    public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        final ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -408,8 +386,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String imgUrl = lookup.getUrl();
                     if(imgUrl != null)
                     {
-                        new DownloadImageTask((ImageView) findViewById(R.id.profile_image))
-                                .execute(imgUrl);
+                        Picasso.with(getBaseContext()).load(imgUrl).into((ImageView) findViewById(R.id.profile_image));
                         Log.v(TAG, "Download Completed :)");
                     }
                 } else {

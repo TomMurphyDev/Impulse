@@ -40,4 +40,6 @@
     <string name="user_profile_thumbnail_image">user profile thumbnail image</string>
     <string name="video_thumbail_image">video thumbail image</string>
     <string name="logo_image">logo image</string>
+    <string name="app_label">Impulse Video</string>
+    <string name="search_hint">search usernames, categories or titles...</string>
 </resources>
