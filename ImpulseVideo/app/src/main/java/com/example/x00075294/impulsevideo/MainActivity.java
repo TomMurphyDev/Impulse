@@ -446,7 +446,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            Log.v(TAG,"Post Found " + results.size() + " Videos");
+            //Log.v(TAG,"Post Found " + results.size() + " Videos");
             populateVideoList(results);
             pd.dismiss();
         }
@@ -455,25 +455,37 @@ public class MainActivity extends AppCompatActivity
         ProgressDialog pd;
         @Override
         protected Void doInBackground(String... strings) {
-            try {
-                //get al matches from oldest to newest
-                results = mVideoTable.where().startsWith("Title",strings[0]).orderBy("createdAt", QueryOrder.Ascending).execute().get();
-                //filter list to all that are contained
-                //as list is compiled it pushes newer videos to the top
-                for (Video v:results) {
-                    if(!v.getTitle().contains(strings[0]) && !v.getDescription().contains(strings[0]))
-                    {
-                        if(!v.getTitle().contains(strings[0]) || !v.getDescription().contains(strings[0])){
-                            results.remove(v);
-                        }
-                    }
+            if (strings[0].isEmpty()) {
+                // Do your request
+                try {
+                    searchVid= mVideoTable
+                            .where().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
+                            .execute()
+                            .get();
+                } catch (Exception e) {
+                    // Output the stack trace.
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                // Output the stack trace.
-                e.printStackTrace();
+            }
+            else
+            {
+                try {
+                    searchVid = mVideoTable
+                            .where()
+                            .field("title").eq(strings[0]).and().field("available").eq(true).orderBy("createdAt", QueryOrder.Descending)
+                            .execute()
+                            .get();
+                    for (Video v:searchVid) {
+                        Log.v(TAG,"HERE!!!!!!!!!! " + v.getStreamUrl() + " Videos");
+                    }
+                } catch (Exception e) {
+                    // Output the stack trace.
+                    e.printStackTrace();
+                }
             }
             return null;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -484,49 +496,29 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (results != null){
-                populateVideoList(results);
+            if (searchVid != null){
+                populateVideoList(searchVid);
             }
             pd.dismiss();
         }
     }
     // list item
-    public class FindProfile extends AsyncTask<Profile,Void,Profile> {
+    public class FindProfile extends AsyncTask<String,Void,Profile> {
         Profile lookup;
-        public FindProfile(Profile p)
-        {
-            this.lookup = p;
-        }
-        Profile res;
         @Override
-        protected Profile doInBackground(Profile... profiles) {
-            try {
-                res = mProfileTable
-                        .lookUp(lookup.getId())
-                        .get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            if(res.getUsername()!= null)
-            {
-                lookup = res;
-                return res;
-            }
-            else{
-                return null;
-            }
-        }
-        @Override
-        public void onPreExecute() {
+        protected void onPreExecute() {
             super.onPreExecute();
         }
-
         @Override
-        protected void onPostExecute(Profile profile) {
-            super.onPostExecute(profile);
-
+        protected Profile doInBackground(String... strings) {
+            // Do your request
+            try {
+                lookup = mProfileTable.lookUp(strings[0]).get();
+            } catch (Exception e) {
+                // Output the stack trace.
+                e.printStackTrace();
+            }
+            return lookup;
         }
     }
     //manipulate a ui element

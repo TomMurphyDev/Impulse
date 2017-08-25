@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.devbrackets.android.exomedia.core.video.scale.ScaleType;
 import com.devbrackets.android.exomedia.listener.VideoControlsButtonListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
@@ -31,9 +32,11 @@ import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import DTO.CommentDto;
 import Model.Comment;
 import Model.CommentAdapter;
 import Model.Profile;
@@ -51,7 +54,15 @@ import static com.example.x00075294.impulsevideo.VideoPreviewActivity.isConnecte
 public class ViewActivity extends AppCompatActivity {
     private static final String TAG = "IMP: VideoView ->";
     private MobileServiceTable<Comment> mCommentTable;
+    private MobileServiceTable<Profile> mProfileTable;
     private List<Comment> commentsResults;
+    private List<Comment> profileResults;
+    private CommentAdapter customAdapter;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,7 @@ public class ViewActivity extends AppCompatActivity {
         Uri myUri = Uri.parse(extras.getString("videoUri"));
         String title = extras.getString("title");
         String description = extras.getString("desc");
+        String userID = extras.getString("userId");
         final String vidId = extras.getString("vidId");
         final String profileId = extras.getString("prof");
         final View tog = (View) findViewById(R.id.video_view_info);
@@ -96,8 +108,8 @@ public class ViewActivity extends AppCompatActivity {
                 });
                 //local copy of table for manipulations to be performed on
                 MobileServiceTable<Video> mVideoTable = mClient.getTable(Video.class);
-                MobileServiceTable<Profile> mProfileTable = mClient.getTable(Profile.class);
-                mCommentTable = mClient.getTable("Comment",Comment.class);
+                mProfileTable = mClient.getTable(Profile.class);
+                mCommentTable = mClient.getTable("Comment", Comment.class);
                 //load the verified user from google sign in
                 if (loadUserTokenCache(mClient)) {
                     Log.v(TAG, "Found Previous Login");
@@ -154,6 +166,7 @@ public class ViewActivity extends AppCompatActivity {
             }
         });
         final TextView titletext = (TextView) findViewById(R.id.view_disp_title);
+        final TextView creatortext = (TextView) findViewById(R.id.view_creatorlabel);
         final TextView desc = (TextView) findViewById(R.id.view_desc);
         Button dismiss = (Button) findViewById(R.id.dismiss);
         dismiss.setOnClickListener(new View.OnClickListener() {
@@ -164,6 +177,7 @@ public class ViewActivity extends AppCompatActivity {
         });
         titletext.setText(title);
         desc.setText(description);
+        creatortext.setText(userID);
         v.setVideoURI(myUri);
         v.getVideoControls().setNextButtonRemoved(false);
         v.getVideoControls().setPreviousButtonRemoved(false);
@@ -213,6 +227,11 @@ public class ViewActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+
     class uploadComment extends AsyncTask<Comment, Void, Void> {
         ProgressDialog pd;
         Profile lookup;
@@ -240,9 +259,9 @@ public class ViewActivity extends AppCompatActivity {
         }
     }
 
-    private void populateCommentList(List<Comment> a) {
+    private void populateCommentList(List<CommentDto> a) {
         // Construct the data source
-        ArrayList<Comment> arrayOfUsers = (ArrayList<Comment>) a;
+        ArrayList<CommentDto> arrayOfUsers = (ArrayList<CommentDto>) a;
         // Create the adapter to convert the array to views
         CommentAdapter adapter = new CommentAdapter(this, arrayOfUsers);
         // Attach the adapter to a ListView
@@ -251,6 +270,9 @@ public class ViewActivity extends AppCompatActivity {
     }
 
     private class LoadVideoComments extends AsyncTask<String, Void, Void> {
+        List<CommentDto> comments = new ArrayList<>();
+        Profile lookup;
+
         @Override
         protected Void doInBackground(String... strings) {
             try {
@@ -259,7 +281,14 @@ public class ViewActivity extends AppCompatActivity {
                         .field("videoID").eq(strings[0]).orderBy("createdAt", QueryOrder.Descending)
                         .execute()
                         .get();
-                Log.v(TAG,"Found " + commentsResults.size() + "Comments");
+                for (Comment c : commentsResults) {
+                    lookup = mProfileTable.lookUp(c.getProfileID()).get();
+                    if (lookup != null) {
+                        CommentDto found = new CommentDto(lookup.getProfileUrl(), lookup.getUsername(), lookup.getThumbnailUrl(), c.getCommentContent());
+                        comments.add(found);
+                    }
+                }
+                Log.v(TAG, "Found " + commentsResults.size() + "Comments");
             } catch (Exception e) {
                 // Output the stack trace.
                 e.printStackTrace();
@@ -270,7 +299,7 @@ public class ViewActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            populateCommentList(commentsResults);
+            populateCommentList(comments);
 
         }
     }

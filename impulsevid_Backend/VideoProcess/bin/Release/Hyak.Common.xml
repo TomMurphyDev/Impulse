@@ -4,6 +4,132 @@
         <name>Hyak.Common</name>
     </assembly>
     <members>
+        <member name="T:Hyak.Common.IServiceOperations`1">
+            <summary>
+            Interface used to represent resource groupings of ServiceClient 
+            operations.
+            </summary>
+            <typeparam name="TClient">Type of the ServiceClient.</typeparam>
+        </member>
+        <member name="P:Hyak.Common.IServiceOperations`1.Client">
+            <summary>
+            Gets a reference to the ServiceClient.
+            </summary>
+        </member>
+        <member name="T:Hyak.Common.ServiceClient`1">
+            <summary>
+            The base ServiceClient class used to call REST services.
+            </summary>
+            <typeparam name="T">Type of the ServiceClient.</typeparam>
+        </member>
+        <member name="F:Hyak.Common.ServiceClient`1._disposed">
+            <summary>
+            A value indicating whether or not the ServiceClient has already
+            been disposed.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.ServiceClient`1._innerHandler">
+            <summary>
+            Reference to the delegated handler of our handler (so we can
+            maintain a proper reference count).
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.ServiceClient`1._handler">
+            <summary>
+            Reference to our HTTP handler (which is the start of our HTTP
+            pipeline).
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.ServiceClient`1.HttpClient">
+            <summary>
+            Gets the HttpClient used for making HTTP requests.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.ServiceClient`1.HttpMessageHandler">
+            <summary>
+            Gets a reference to our HTTP handler (which is the start of our
+            HTTP pipeline).
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.ServiceClient`1.UserAgent">
+            <summary>
+            Gets the UserAgent collection which can be augmented with custom
+            user agent strings.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.#ctor">
+            <summary>
+            Initializes a new instance of the ServiceClient class.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.#ctor(System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a new instance of the ServiceClient class.
+            </summary>
+            <param name="httpClient">The http client.</param>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.Dispose">
+            <summary>
+            Dispose the ServiceClient.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.GetHttpPipeline">
+            <summary>
+            Get the HTTP pipeline for the given service client.
+            </summary>
+            <returns>The client's HTTP pipeline.</returns>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.AddHandlerToPipeline(System.Net.Http.DelegatingHandler)">
+            <summary>
+            Add a handler to the end of the client's HTTP pipeline.
+            </summary>
+            <param name="handler">The handler to add.</param>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.SetRetryPolicy(Hyak.Common.TransientFaultHandling.RetryPolicy)">
+            <summary>
+            Sets retry policy for the client.
+            </summary>
+            <param name="retryPolicy">Retry policy to set.</param>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.InitializeHttpClient(System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Initializes HttpClient.
+            </summary>
+            <param name="httpMessageHandler">Http message handler to use with Http client.</param>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.CreateHttpClient">
+            <summary>
+            Create the HTTP client.
+            </summary>
+            <returns>The HTTP client.</returns>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.GetAssemblyVersion">
+            <summary>
+            Get the assembly version of a service client.
+            </summary>
+            <returns>The assembly version of the client.</returns>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.Clone(Hyak.Common.ServiceClient{`0})">
+            <summary>
+            Clone the service client.
+            </summary>
+            <param name="client">The client to clone.</param>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.CloneHttpClient(System.Net.Http.HttpClient,System.Net.Http.HttpClient)">
+            <summary>
+            Clone HttpClient properties.
+            </summary>
+            <param name="source">The client to clone.</param>
+            <param name="destination">The client to copy into.</param>
+        </member>
+        <member name="M:Hyak.Common.ServiceClient`1.WithHandler(Hyak.Common.ServiceClient{`0},System.Net.Http.DelegatingHandler)">
+            <summary>
+            Extend the ServiceClient with a new handler.
+            </summary>
+            <param name="newClient">The new client that will extend.</param>
+            <param name="handler">The handler to extend with.</param>
+            <returns>The extended client.</returns>
+        </member>
         <member name="T:Hyak.Common.CloudCredentials">
             <summary>
             The CloudCredentials class is the base class for providing credentials
@@ -52,22 +178,144 @@
             Original response message body 
             </summary>
         </member>
+        <member name="T:Hyak.Common.CloudException">
+            <summary>
+            Exception thrown for any invalid response.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudException.Error">
+            <summary>
+            Gets the error returned from the server.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudException.Request">
+            <summary>
+            Gets information about the associated HTTP request.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudException.Response">
+            <summary>
+            Gets information about the associated HTTP response.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.CloudException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the CloudException class.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:Hyak.Common.CloudException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the CloudException class.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="innerException">Inner exception.</param>
+        </member>
+        <member name="M:Hyak.Common.CloudException.Create(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,System.Exception)">
+            <summary>
+            Create a CloudException from a failed response.
+            </summary>
+            <param name="request">The HTTP request.</param>
+            <param name="requestContent">The HTTP request content.</param>
+            <param name="response">The HTTP response.</param>
+            <param name="responseContent">The HTTP response content.</param>
+            <param name="innerException">Optional inner exception.</param>
+            <returns>A CloudException representing the failure.</returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.Create(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,Hyak.Common.CloudExceptionType,System.Exception)">
+            <summary>
+            Create a CloudException from a failed response.
+            This method is obsolete. Use Create without defaultTo parameter.
+            </summary>
+            <param name="request">The HTTP request.</param>
+            <param name="requestContent">The HTTP request content.</param>
+            <param name="response">The HTTP response.</param>
+            <param name="responseContent">The HTTP response content.</param>
+            <param name="defaultTo">The content type to default to if none of the types matches.</param>
+            <param name="innerException">Optional inner exception.</param>
+            <returns>A CloudException representing the failure.</returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.CreateFromXml(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,System.Exception)">
+            <summary>
+            Create a CloudException from a failed response sending XML content.
+            This method is obsolete. Use Create without defaultTo parameter.
+            </summary>
+            <param name="request">The HTTP request.</param>
+            <param name="requestContent">The HTTP request content.</param>
+            <param name="response">The HTTP response.</param>
+            <param name="responseContent">The HTTP response content.</param>
+            <param name="innerException">Optional inner exception.</param>
+            <returns>A CloudException representing the failure.</returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.CreateFromJson(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,System.Exception)">
+            <summary>
+            Create a CloudException from a failed response sending JSON content.
+            This method is obsolete. Use Create without defaultTo parameter.
+            </summary>
+            <param name="request">The HTTP request.</param>
+            <param name="requestContent">The HTTP request content.</param>
+            <param name="response">The HTTP response.</param>
+            <param name="responseContent">The HTTP response content.</param>
+            <param name="innerException">Optional inner exception.</param>
+            <returns>A CloudException representing the failure.</returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.ParseXmlOrJsonError(System.String)">
+            <summary>
+            Parse the response content as either an XML or JSON error message.
+            </summary>
+            <param name="content">The response content.</param>
+            <returns>
+            An object containing the parsed error code and message.
+            </returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.ParseXmlError(System.String)">
+            <summary>
+            Parse the response content as an XML error message.
+            </summary>
+            <param name="content">The response content.</param>
+            <returns>
+            An object containing the parsed error code and message.
+            </returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.ParseJsonError(System.String)">
+            <summary>
+            Parse the response content as an JSON error message.
+            </summary>
+            <param name="content">The response content.</param>
+            <returns>
+            An object containing the parsed error code and message.
+            </returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.IsXml(System.String,System.Boolean)">
+            <summary>
+            Checks if content is possibly an XML.
+            </summary>
+            <param name="content">String to check.</param>
+            <param name="validate">If set to true will validate entire XML for validity 
+            otherwise will just check the first character.</param>
+            <returns>True is content is possibly an XML otherwise false.</returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.IsJson(System.String,System.Boolean)">
+            <summary>
+            Checks if content is possibly a JSON.
+            </summary>
+            <param name="content">String to check.</param>
+            <param name="validate">If set to true will validate entire JSON for validity 
+            otherwise will just check the first character.</param>
+            <returns>True is content is possibly an JSON otherwise false.</returns>
+        </member>
+        <member name="M:Hyak.Common.CloudException.FirstNonWhitespaceCharacter(System.String)">
+            <summary>
+            Returns first non whitespace character
+            </summary>
+            <param name="content">Text to search in</param>
+            <returns>Non whitespace or default char</returns>
+        </member>
         <member name="T:Hyak.Common.CloudHttpErrorInfo">
             <summary>
             Base class used to describe HTTP requests and responses associated with
             error conditions.
             </summary>
-        </member>
-        <member name="M:Hyak.Common.CloudHttpErrorInfo.#ctor">
-            <summary>
-            Initializes a new instance of the CloudHttpErrorInfo class.
-            </summary>
-        </member>
-        <member name="M:Hyak.Common.CloudHttpErrorInfo.CopyHeaders(System.Net.Http.Headers.HttpHeaders)">
-            <summary>
-            Add the HTTP message headers to the error info.
-            </summary>
-            <param name="headers">Collection of HTTP header.</param>
         </member>
         <member name="P:Hyak.Common.CloudHttpErrorInfo.Content">
             <summary>
@@ -84,9 +332,35 @@
             Gets or sets the HTTP message version.
             </summary>
         </member>
+        <member name="M:Hyak.Common.CloudHttpErrorInfo.#ctor">
+            <summary>
+            Initializes a new instance of the CloudHttpErrorInfo class.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.CloudHttpErrorInfo.CopyHeaders(System.Net.Http.Headers.HttpHeaders)">
+            <summary>
+            Add the HTTP message headers to the error info.
+            </summary>
+            <param name="headers">Collection of HTTP header.</param>
+        </member>
         <member name="T:Hyak.Common.CloudHttpRequestErrorInfo">
             <summary>
             Describes HTTP requests associated with error conditions.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudHttpRequestErrorInfo.Method">
+            <summary>
+            Gets or sets the HTTP method used by the HTTP request message.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudHttpRequestErrorInfo.RequestUri">
+            <summary>
+            Gets or sets the Uri used for the HTTP request.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudHttpRequestErrorInfo.Properties">
+            <summary>
+            Gets a set of properties for the HTTP request.
             </summary>
         </member>
         <member name="M:Hyak.Common.CloudHttpRequestErrorInfo.#ctor">
@@ -112,24 +386,20 @@
             </param>
             <returns>A CloudHttpRequestErrorInfo instance.</returns>
         </member>
-        <member name="P:Hyak.Common.CloudHttpRequestErrorInfo.Method">
-            <summary>
-            Gets or sets the HTTP method used by the HTTP request message.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.CloudHttpRequestErrorInfo.RequestUri">
-            <summary>
-            Gets or sets the Uri used for the HTTP request.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.CloudHttpRequestErrorInfo.Properties">
-            <summary>
-            Gets a set of properties for the HTTP request.
-            </summary>
-        </member>
         <member name="T:Hyak.Common.CloudHttpResponseErrorInfo">
             <summary>
             Describes HTTP responses associated with error conditions.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudHttpResponseErrorInfo.StatusCode">
+            <summary>
+            Gets or sets the status code of the HTTP response.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.CloudHttpResponseErrorInfo.ReasonPhrase">
+            <summary>
+            Gets or sets the reason phrase which typically is sent by servers together
+            with the status code.
             </summary>
         </member>
         <member name="M:Hyak.Common.CloudHttpResponseErrorInfo.#ctor">
@@ -155,15 +425,77 @@
             </param>
             <returns>A CloudHttpResponseErrorInfo instance.</returns>
         </member>
-        <member name="P:Hyak.Common.CloudHttpResponseErrorInfo.StatusCode">
+        <member name="T:Hyak.Common.TracingExtensions">
             <summary>
-            Gets or sets the status code of the HTTP response.
+            Helper extension methods used by tracing providers.
             </summary>
         </member>
-        <member name="P:Hyak.Common.CloudHttpResponseErrorInfo.ReasonPhrase">
+        <member name="M:Hyak.Common.TracingExtensions.AsFormattedString(System.Net.Http.HttpRequestMessage)">
             <summary>
-            Gets or sets the reason phrase which typically is sent by servers together
-            with the status code.
+            Returns string representation of a HttpRequestMessage.
+            </summary>
+            <param name="httpRequest">Request to format.</param>
+            <returns>Formatted string.</returns>
+        </member>
+        <member name="M:Hyak.Common.TracingExtensions.AsFormattedString(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Returns string representation of a HttpResponseMessage.
+            </summary>
+            <param name="httpResponse">Response to format.</param>
+            <returns>Formatted string.</returns>
+        </member>
+        <member name="M:Hyak.Common.TracingExtensions.AsFormattedString``2(System.Collections.Generic.IDictionary{``0,``1})">
+            <summary>
+            Converts given dictionary into a log string.
+            </summary>
+            <typeparam name="TKey">The dictionary key type</typeparam>
+            <typeparam name="TValue">The dictionary value type</typeparam>
+            <param name="dictionary">The dictionary collection object</param>
+            <returns>The log string</returns>
+        </member>
+        <member name="T:Hyak.Common.RetryHandler">
+            <summary>
+            Http retry handler.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.RetryHandler.RetryPolicy">
+            <summary>
+            Gets or sets retry policy.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.RetryHandler.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hyak.Common.RetryHandler"/> class. Sets 
+            default retry policty base on Exponential Backoff.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.RetryHandler.#ctor(System.Net.Http.DelegatingHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hyak.Common.RetryHandler"/> class. Sets 
+            the default retry policty base on Exponential Backoff.
+            </summary>
+            <param name="innerHandler">Inner http handler.</param>
+        </member>
+        <member name="M:Hyak.Common.RetryHandler.#ctor(Hyak.Common.TransientFaultHandling.RetryPolicy,System.Net.Http.DelegatingHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hyak.Common.RetryHandler"/> class. 
+            </summary>
+            <param name="retryPolicy">Retry policy to use.</param>
+            <param name="innerHandler">Inner http handler.</param>
+        </member>
+        <member name="M:Hyak.Common.RetryHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Sends an HTTP request to the inner handler to send to the server as an asynchronous
+            operation. Retries request if needed based on Retry Policy.
+            </summary>
+            <param name="request">The HTTP request message to send to the server.</param>
+            <param name="cancellationToken">A cancellation token to cancel operation.</param>
+            <returns>Returns System.Threading.Tasks.Task&lt;TResult&gt;. The 
+            task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="E:Hyak.Common.RetryHandler.Retrying">
+            <summary>
+            An instance of a callback delegate that will be invoked whenever a retry condition is encountered.
             </summary>
         </member>
         <member name="T:Hyak.Common.Internals.DisposableReference`1">
@@ -294,7 +626,7 @@
         </member>
         <member name="M:Hyak.Common.Internals.IndisposableDelegatingHandler.#ctor(System.Net.Http.HttpMessageHandler)">
             <summary>
-            Initializes a new instance of the <see cref="T:Hyak.Common.Internals.IndisposableDelegatingHandler"/> class from HttpMessageHandler.
+            Initializes a new instance of the <see cref="T:Hyak.Common.Internals.IndisposableDelegatingHandler" /> class from HttpMessageHandler.
             </summary>
             <param name="innerHandler">InnerHandler to wrap.</param>
         </member>
@@ -356,400 +688,117 @@
             operations for the Service Management API.
             </summary>
         </member>
-        <member name="T:Hyak.Common.RetryHandler">
+        <member name="T:Hyak.Common.Properties.Resources">
             <summary>
-            Http retry handler.
+               A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
-        <member name="M:Hyak.Common.RetryHandler.#ctor">
+        <member name="P:Hyak.Common.Properties.Resources.ResourceManager">
             <summary>
-            Initializes a new instance of the <see cref="T:Hyak.Common.RetryHandler"/> class. Sets 
-            default retry policty base on Exponential Backoff.
+               Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
-        <member name="M:Hyak.Common.RetryHandler.#ctor(System.Net.Http.DelegatingHandler)">
+        <member name="P:Hyak.Common.Properties.Resources.Culture">
             <summary>
-            Initializes a new instance of the <see cref="T:Hyak.Common.RetryHandler"/> class. Sets 
-            the default retry policty base on Exponential Backoff.
-            </summary>
-            <param name="innerHandler">Inner http handler.</param>
-        </member>
-        <member name="M:Hyak.Common.RetryHandler.#ctor(Hyak.Common.TransientFaultHandling.RetryPolicy,System.Net.Http.DelegatingHandler)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Hyak.Common.RetryHandler"/> class. 
-            </summary>
-            <param name="retryPolicy">Retry policy to use.</param>
-            <param name="innerHandler">Inner http handler.</param>
-        </member>
-        <member name="M:Hyak.Common.RetryHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
-            <summary>
-            Sends an HTTP request to the inner handler to send to the server as an asynchronous
-            operation. Retries request if needed based on Retry Policy.
-            </summary>
-            <param name="request">The HTTP request message to send to the server.</param>
-            <param name="cancellationToken">A cancellation token to cancel operation.</param>
-            <returns>Returns System.Threading.Tasks.Task&lt;TResult&gt;. The 
-            task object representing the asynchronous operation.</returns>
-        </member>
-        <member name="P:Hyak.Common.RetryHandler.RetryPolicy">
-            <summary>
-            Gets or sets retry policy.
+               Overrides the current thread's CurrentUICulture property for all
+               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="E:Hyak.Common.RetryHandler.Retrying">
+        <member name="P:Hyak.Common.Properties.Resources.ArgumentCannotBeEmpty">
+             <summary>
+                Looks up a localized string similar to Value cannot be empty.
+            Parameter name: {0}.
+             </summary>
+        </member>
+        <member name="P:Hyak.Common.Properties.Resources.ArgumentCannotBeGreaterThanBaseline">
             <summary>
-            An instance of a callback delegate that will be invoked whenever a retry condition is encountered.
+               Looks up a localized string similar to The specified argument {0} cannot be greater than its ceiling value of {1}..
             </summary>
         </member>
-        <member name="F:Hyak.Common.TracingAdapter._interceptors">
+        <member name="P:Hyak.Common.Properties.Resources.ArgumentCannotBeNegative">
             <summary>
-            The collection of tracing interceptors to notify.
+               Looks up a localized string similar to The specified argument {0} cannot be initialized with a negative value..
             </summary>
         </member>
-        <member name="F:Hyak.Common.TracingAdapter._threadSafeInterceptors">
+        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_CreateCouldNotConvertException">
             <summary>
-            A read-only, thread-safe collection of tracing interceptors.  Since
-            List is only thread-safe for reads (and adding/removing tracing
-            interceptors isn't a very common operation), we simply replace the
-            entire collection of interceptors so any enumeration of the list
-            in progress on a different thread will not be affected by the
-            change.
+               Looks up a localized string similar to Failed to convert parameter {0} value &apos;{1}&apos; to type {2}..
             </summary>
         </member>
-        <member name="F:Hyak.Common.TracingAdapter._lock">
+        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_CreateFromSettings_CreateSettingsFailedException">
             <summary>
-            Lock used to synchronize mutation of the tracing interceptors.
+               Looks up a localized string similar to {3}  Failed to create {0} from connection settings {1} = &quot;{2}&quot;..
             </summary>
         </member>
-        <member name="M:Hyak.Common.TracingAdapter.#cctor">
+        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_CreateFromSettings_NoConnectionSettingsFound">
             <summary>
-            Initializes a new instance of the CloudTracing class.
+               Looks up a localized string similar to No connection settings found for type {0}.  Enable tracing for more information..
             </summary>
         </member>
-        <member name="M:Hyak.Common.TracingAdapter.AddTracingInterceptor(Hyak.Common.ICloudTracingInterceptor)">
+        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_GetCredentials_NotFound">
             <summary>
-            Add a tracing interceptor to be notified of changes.
-            </summary>
-            <param name="interceptor">The tracing interceptor.</param>
-        </member>
-        <member name="M:Hyak.Common.TracingAdapter.RemoveTracingInterceptor(Hyak.Common.ICloudTracingInterceptor)">
-            <summary>
-            Remove a tracing interceptor from change notifications.
-            </summary>
-            <param name="interceptor">The tracing interceptor.</param>
-            <returns>
-            True if the tracing interceptor was found and removed; false
-            otherwise.
-            </returns>
-        </member>
-        <member name="P:Hyak.Common.TracingAdapter.IsEnabled">
-            <summary>
-            Gets or sets a value indicating whether tracing is enabled.
-            Tracing can be disabled for performance.
+               Looks up a localized string similar to No credentials of type &apos;{0}&apos; could be initialized from the provided settings..
             </summary>
         </member>
-        <member name="P:Hyak.Common.TracingAdapter.TracingInterceptors">
+        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_GetParameter_NotFound">
             <summary>
-            Gets a sequence of the tracing interceptors to notify of changes.
+               Looks up a localized string similar to Parameter {0} is required..
             </summary>
         </member>
-        <member name="T:Hyak.Common.ServiceClient`1">
+        <member name="P:Hyak.Common.Properties.Resources.DefaultRetryStrategyMappingNotFound">
             <summary>
-            The base ServiceClient class used to call REST services.
-            </summary>
-            <typeparam name="T">Type of the ServiceClient.</typeparam>
-        </member>
-        <member name="F:Hyak.Common.ServiceClient`1._transportHandlerProvider">
-            <summary>
-            Gets the Platform's IHttpTransportHandlerProvider which gives the
-            default HttpHandler for sending web requests.
+               Looks up a localized string similar to Default retry strategy for technology {0}, named &apos;{1}&apos;, is not defined..
             </summary>
         </member>
-        <member name="F:Hyak.Common.ServiceClient`1._disposed">
+        <member name="P:Hyak.Common.Properties.Resources.DefaultRetryStrategyNotFound">
             <summary>
-            A value indicating whether or not the ServiceClient has already
-            been disposed.
+               Looks up a localized string similar to Default retry strategy for technology {0} was not not defined, and there is no overall default strategy..
             </summary>
         </member>
-        <member name="F:Hyak.Common.ServiceClient`1._innerHandler">
+        <member name="P:Hyak.Common.Properties.Resources.ExceptionRetryHandlerMissing">
             <summary>
-            Reference to the delegated handler of our handler (so we can
-            maintain a proper reference count).
+               Looks up a localized string similar to Retry handler is not present in the HttpClient handler stack..
             </summary>
         </member>
-        <member name="F:Hyak.Common.ServiceClient`1._handler">
+        <member name="P:Hyak.Common.Properties.Resources.ExceptionRetryManagerAlreadySet">
             <summary>
-            Reference to our HTTP handler (which is the start of our HTTP
-            pipeline).
+               Looks up a localized string similar to The RetryManager is already set..
             </summary>
         </member>
-        <member name="M:Hyak.Common.ServiceClient`1.#cctor">
+        <member name="P:Hyak.Common.Properties.Resources.ExceptionRetryManagerNotSet">
             <summary>
-            Initializes static members of the ServiceClient class.
+               Looks up a localized string similar to The default RetryManager has not been set. Set it by invoking the RetryManager.SetDefault static method, or if you are using declarative configuration, you can invoke the RetryPolicyFactory.CreateDefault() method to automatically create the retry manager from the configuration file..
             </summary>
         </member>
-        <member name="M:Hyak.Common.ServiceClient`1.#ctor">
+        <member name="P:Hyak.Common.Properties.Resources.ResponseStatusCodeError">
             <summary>
-            Initializes a new instance of the ServiceClient class.
+               Looks up a localized string similar to Response status code indicates server error: {0} ({1})..
             </summary>
         </member>
-        <member name="M:Hyak.Common.ServiceClient`1.#ctor(System.Net.Http.HttpClient)">
+        <member name="P:Hyak.Common.Properties.Resources.RetryLimitExceeded">
             <summary>
-            Initializes a new instance of the ServiceClient class.
-            </summary>
-            <param name="httpClient">The http client.</param>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.Dispose">
-            <summary>
-            Dispose the ServiceClient.
+               Looks up a localized string similar to The action has exceeded its defined retry limit..
             </summary>
         </member>
-        <member name="M:Hyak.Common.ServiceClient`1.GetHttpPipeline">
+        <member name="P:Hyak.Common.Properties.Resources.RetryStrategyNotFound">
             <summary>
-            Get the HTTP pipeline for the given service client.
-            </summary>
-            <returns>The client's HTTP pipeline.</returns>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.AddHandlerToPipeline(System.Net.Http.DelegatingHandler)">
-            <summary>
-            Add a handler to the end of the client's HTTP pipeline.
-            </summary>
-            <param name="handler">The handler to add.</param>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.SetRetryPolicy(Hyak.Common.TransientFaultHandling.RetryPolicy)">
-            <summary>
-            Sets retry policy for the client.
-            </summary>
-            <param name="retryPolicy">Retry policy to set.</param>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.InitializeHttpClient(System.Net.Http.HttpMessageHandler)">
-            <summary>
-            Initializes HttpClient.
-            </summary>
-            <param name="httpMessageHandler">Http message handler to use with Http client.</param>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.CreateHttpClient">
-            <summary>
-            Create the HTTP client.
-            </summary>
-            <returns>The HTTP client.</returns>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.GetAssemblyVersion">
-            <summary>
-            Get the assembly version of a service client.
-            </summary>
-            <returns>The assembly version of the client.</returns>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.Clone(Hyak.Common.ServiceClient{`0})">
-            <summary>
-            Clone the service client.
-            </summary>
-            <param name="client">The client to clone.</param>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.CloneHttpClient(System.Net.Http.HttpClient,System.Net.Http.HttpClient)">
-            <summary>
-            Clone HttpClient properties.
-            </summary>
-            <param name="source">The client to clone.</param>
-            <param name="destination">The client to copy into.</param>
-        </member>
-        <member name="M:Hyak.Common.ServiceClient`1.WithHandler(Hyak.Common.ServiceClient{`0},System.Net.Http.DelegatingHandler)">
-            <summary>
-            Extend the ServiceClient with a new handler.
-            </summary>
-            <param name="newClient">The new client that will extend.</param>
-            <param name="handler">The handler to extend with.</param>
-            <returns>The extended client.</returns>
-        </member>
-        <member name="P:Hyak.Common.ServiceClient`1.HttpClient">
-            <summary>
-            Gets the HttpClient used for making HTTP requests.
+               Looks up a localized string similar to The retry strategy with name &apos;{0}&apos; cannot be found..
             </summary>
         </member>
-        <member name="P:Hyak.Common.ServiceClient`1.HttpMessageHandler">
+        <member name="P:Hyak.Common.Properties.Resources.StringCannotBeEmpty">
             <summary>
-            Gets a reference to our HTTP handler (which is the start of our
-            HTTP pipeline).
+               Looks up a localized string similar to The specified string argument {0} must not be empty..
             </summary>
         </member>
-        <member name="P:Hyak.Common.ServiceClient`1.UserAgent">
+        <member name="P:Hyak.Common.Properties.Resources.TaskCannotBeNull">
             <summary>
-            Gets the UserAgent collection which can be augmented with custom
-            user agent strings.
+               Looks up a localized string similar to The specified argument &apos;{0}&apos; cannot return a null task when invoked..
             </summary>
         </member>
-        <member name="T:Hyak.Common.IServiceOperations`1">
+        <member name="P:Hyak.Common.Properties.Resources.TaskMustBeScheduled">
             <summary>
-            Interface used to represent resource groupings of ServiceClient 
-            operations.
+               Looks up a localized string similar to The specified argument &apos;{0}&apos; must return a scheduled task (also known as &quot;hot&quot; task) when invoked..
             </summary>
-            <typeparam name="TClient">Type of the ServiceClient.</typeparam>
-        </member>
-        <member name="P:Hyak.Common.IServiceOperations`1.Client">
-            <summary>
-            Gets a reference to the ServiceClient.
-            </summary>
-        </member>
-        <member name="T:Hyak.Common.CloudException">
-            <summary>
-            Exception thrown for any invalid response.
-            </summary>
-        </member>
-        <member name="M:Hyak.Common.CloudException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the CloudException class.
-            </summary>
-            <param name="message">The exception message.</param>
-        </member>
-        <member name="M:Hyak.Common.CloudException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the CloudException class.
-            </summary>
-            <param name="message">The exception message.</param>
-            <param name="innerException">Inner exception.</param>
-        </member>
-        <member name="M:Hyak.Common.CloudException.Create(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,System.Exception)">
-            <summary>
-            Create a CloudException from a failed response.
-            </summary>
-            <param name="request">The HTTP request.</param>
-            <param name="requestContent">The HTTP request content.</param>
-            <param name="response">The HTTP response.</param>
-            <param name="responseContent">The HTTP response content.</param>
-            <param name="innerException">Optional inner exception.</param>
-            <returns>A CloudException representing the failure.</returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.Create(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,Hyak.Common.CloudExceptionType,System.Exception)">
-            <summary>
-            Create a CloudException from a failed response.
-            This method is obsolete. Use Create without defaultTo parameter.
-            </summary>
-            <param name="request">The HTTP request.</param>
-            <param name="requestContent">The HTTP request content.</param>
-            <param name="response">The HTTP response.</param>
-            <param name="responseContent">The HTTP response content.</param>
-            <param name="defaultTo">The content type to default to if none of the types matches.</param>
-            <param name="innerException">Optional inner exception.</param>
-            <returns>A CloudException representing the failure.</returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.CreateFromXml(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,System.Exception)">
-            <summary>
-            Create a CloudException from a failed response sending XML content.
-            This method is obsolete. Use Create without defaultTo parameter.
-            </summary>
-            <param name="request">The HTTP request.</param>
-            <param name="requestContent">The HTTP request content.</param>
-            <param name="response">The HTTP response.</param>
-            <param name="responseContent">The HTTP response content.</param>
-            <param name="innerException">Optional inner exception.</param>
-            <returns>A CloudException representing the failure.</returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.CreateFromJson(System.Net.Http.HttpRequestMessage,System.String,System.Net.Http.HttpResponseMessage,System.String,System.Exception)">
-            <summary>
-            Create a CloudException from a failed response sending JSON content.
-            This method is obsolete. Use Create without defaultTo parameter.
-            </summary>
-            <param name="request">The HTTP request.</param>
-            <param name="requestContent">The HTTP request content.</param>
-            <param name="response">The HTTP response.</param>
-            <param name="responseContent">The HTTP response content.</param>
-            <param name="innerException">Optional inner exception.</param>
-            <returns>A CloudException representing the failure.</returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.ParseXmlOrJsonError(System.String)">
-            <summary>
-            Parse the response content as either an XML or JSON error message.
-            </summary>
-            <param name="content">The response content.</param>
-            <returns>
-            An object containing the parsed error code and message.
-            </returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.ParseXmlError(System.String)">
-            <summary>
-            Parse the response content as an XML error message.
-            </summary>
-            <param name="content">The response content.</param>
-            <returns>
-            An object containing the parsed error code and message.
-            </returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.ParseJsonError(System.String)">
-            <summary>
-            Parse the response content as an JSON error message.
-            </summary>
-            <param name="content">The response content.</param>
-            <returns>
-            An object containing the parsed error code and message.
-            </returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.IsXml(System.String,System.Boolean)">
-            <summary>
-            Checks if content is possibly an XML.
-            </summary>
-            <param name="content">String to check.</param>
-            <param name="validate">If set to true will validate entire XML for validity 
-            otherwise will just check the first character.</param>
-            <returns>True is content is possibly an XML otherwise false.</returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.IsJson(System.String,System.Boolean)">
-            <summary>
-            Checks if content is possibly a JSON.
-            </summary>
-            <param name="content">String to check.</param>
-            <param name="validate">If set to true will validate entire JSON for validity 
-            otherwise will just check the first character.</param>
-            <returns>True is content is possibly an JSON otherwise false.</returns>
-        </member>
-        <member name="M:Hyak.Common.CloudException.FirstNonWhitespaceCharacter(System.String)">
-            <summary>
-            Returns first non whitespace character
-            </summary>
-            <param name="content">Text to search in</param>
-            <returns>Non whitespace or default char</returns>
-        </member>
-        <member name="P:Hyak.Common.CloudException.Error">
-            <summary>
-            Gets the error returned from the server.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.CloudException.Request">
-            <summary>
-            Gets information about the associated HTTP request.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.CloudException.Response">
-            <summary>
-            Gets information about the associated HTTP response.
-            </summary>
-        </member>
-        <member name="T:Hyak.Common.TracingExtensions">
-            <summary>
-            Helper extension methods used by tracing providers.
-            </summary>
-        </member>
-        <member name="M:Hyak.Common.TracingExtensions.AsFormattedString(System.Net.Http.HttpRequestMessage)">
-            <summary>
-            Returns string representation of a HttpRequestMessage.
-            </summary>
-            <param name="httpRequest">Request to format.</param>
-            <returns>Formatted string.</returns>
-        </member>
-        <member name="M:Hyak.Common.TracingExtensions.AsFormattedString(System.Net.Http.HttpResponseMessage)">
-            <summary>
-            Returns string representation of a HttpResponseMessage.
-            </summary>
-            <param name="httpResponse">Response to format.</param>
-            <returns>Formatted string.</returns>
-        </member>
-        <member name="M:Hyak.Common.TracingExtensions.AsFormattedString``2(System.Collections.Generic.IDictionary{``0,``1})">
-            <summary>
-            Converts given dictionary into a log string.
-            </summary>
-            <typeparam name="TKey">The dictionary key type</typeparam>
-            <typeparam name="TValue">The dictionary value type</typeparam>
-            <param name="dictionary">The dictionary collection object</param>
-            <returns>The log string</returns>
         </member>
         <member name="T:Hyak.Common.ICloudTracingInterceptor">
             <summary>
@@ -810,117 +859,57 @@
             <param name="invocationId">Method invocation identifier.</param>
             <param name="returnValue">Method return value.</param>
         </member>
-        <member name="T:Hyak.Common.Properties.Resources">
+        <member name="F:Hyak.Common.TracingAdapter._interceptors">
             <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
+            The collection of tracing interceptors to notify.
             </summary>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.ResourceManager">
+        <member name="F:Hyak.Common.TracingAdapter._threadSafeInterceptors">
             <summary>
-              Returns the cached ResourceManager instance used by this class.
+            A read-only, thread-safe collection of tracing interceptors.  Since
+            List is only thread-safe for reads (and adding/removing tracing
+            interceptors isn't a very common operation), we simply replace the
+            entire collection of interceptors so any enumeration of the list
+            in progress on a different thread will not be affected by the
+            change.
             </summary>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.Culture">
+        <member name="F:Hyak.Common.TracingAdapter._lock">
             <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
+            Lock used to synchronize mutation of the tracing interceptors.
             </summary>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.ArgumentCannotBeEmpty">
-             <summary>
-               Looks up a localized string similar to Value cannot be empty.
-            Parameter name: {0}.
-             </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ArgumentCannotBeGreaterThanBaseline">
+        <member name="P:Hyak.Common.TracingAdapter.IsEnabled">
             <summary>
-              Looks up a localized string similar to The specified argument {0} cannot be greater than its ceiling value of {1}..
+            Gets or sets a value indicating whether tracing is enabled.
+            Tracing can be disabled for performance.
             </summary>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.ArgumentCannotBeNegative">
+        <member name="P:Hyak.Common.TracingAdapter.TracingInterceptors">
             <summary>
-              Looks up a localized string similar to The specified argument {0} cannot be initialized with a negative value..
+            Gets a sequence of the tracing interceptors to notify of changes.
             </summary>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_CreateCouldNotConvertException">
+        <member name="M:Hyak.Common.TracingAdapter.#cctor">
             <summary>
-              Looks up a localized string similar to Failed to convert parameter {0} value &apos;{1}&apos; to type {2}..
+            Initializes a new instance of the CloudTracing class.
             </summary>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_CreateFromSettings_CreateSettingsFailedException">
+        <member name="M:Hyak.Common.TracingAdapter.AddTracingInterceptor(Hyak.Common.ICloudTracingInterceptor)">
             <summary>
-              Looks up a localized string similar to {3}  Failed to create {0} from connection settings {1} = &quot;{2}&quot;..
+            Add a tracing interceptor to be notified of changes.
             </summary>
+            <param name="interceptor">The tracing interceptor.</param>
         </member>
-        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_CreateFromSettings_NoConnectionSettingsFound">
+        <member name="M:Hyak.Common.TracingAdapter.RemoveTracingInterceptor(Hyak.Common.ICloudTracingInterceptor)">
             <summary>
-              Looks up a localized string similar to No connection settings found for type {0}.  Enable tracing for more information..
+            Remove a tracing interceptor from change notifications.
             </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_GetCredentials_NotFound">
-            <summary>
-              Looks up a localized string similar to No credentials of type &apos;{0}&apos; could be initialized from the provided settings..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ConfigurationHelper_GetParameter_NotFound">
-            <summary>
-              Looks up a localized string similar to Parameter {0} is required..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.DefaultRetryStrategyMappingNotFound">
-            <summary>
-              Looks up a localized string similar to Default retry strategy for technology {0}, named &apos;{1}&apos;, is not defined..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.DefaultRetryStrategyNotFound">
-            <summary>
-              Looks up a localized string similar to Default retry strategy for technology {0} was not not defined, and there is no overall default strategy..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ExceptionRetryHandlerMissing">
-            <summary>
-              Looks up a localized string similar to Retry handler is not present in the HttpClient handler stack..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ExceptionRetryManagerAlreadySet">
-            <summary>
-              Looks up a localized string similar to The RetryManager is already set..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ExceptionRetryManagerNotSet">
-            <summary>
-              Looks up a localized string similar to The default RetryManager has not been set. Set it by invoking the RetryManager.SetDefault static method, or if you are using declarative configuration, you can invoke the RetryPolicyFactory.CreateDefault() method to automatically create the retry manager from the configuration file..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.ResponseStatusCodeError">
-            <summary>
-              Looks up a localized string similar to Response status code indicates server error: {0} ({1})..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.RetryLimitExceeded">
-            <summary>
-              Looks up a localized string similar to The action has exceeded its defined retry limit..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.RetryStrategyNotFound">
-            <summary>
-              Looks up a localized string similar to The retry strategy with name &apos;{0}&apos; cannot be found..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.StringCannotBeEmpty">
-            <summary>
-              Looks up a localized string similar to The specified string argument {0} must not be empty..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.TaskCannotBeNull">
-            <summary>
-              Looks up a localized string similar to The specified argument &apos;{0}&apos; cannot return a null task when invoked..
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.Properties.Resources.TaskMustBeScheduled">
-            <summary>
-              Looks up a localized string similar to The specified argument &apos;{0}&apos; must return a scheduled task (also known as &quot;hot&quot; task) when invoked..
-            </summary>
+            <param name="interceptor">The tracing interceptor.</param>
+            <returns>
+            True if the tracing interceptor was found and removed; false
+            otherwise.
+            </returns>
         </member>
         <member name="T:Hyak.Common.TransientFaultHandling.AsyncExecution`1">
             <summary>
@@ -946,18 +935,6 @@
             Default Http error detection strategy based on Http Status Code.
             </summary>
         </member>
-        <member name="T:Hyak.Common.TransientFaultHandling.ITransientErrorDetectionStrategy">
-            <summary>
-            Defines an interface that must be implemented by custom components responsible for detecting specific transient conditions.
-            </summary>
-        </member>
-        <member name="M:Hyak.Common.TransientFaultHandling.ITransientErrorDetectionStrategy.IsTransient(System.Exception)">
-            <summary>
-            Determines whether the specified exception represents a transient failure that can be compensated by a retry.
-            </summary>
-            <param name="ex">The exception object to be verified.</param>
-            <returns>true if the specified exception is considered as transient; otherwise, false.</returns>
-        </member>
         <member name="M:Hyak.Common.TransientFaultHandling.DefaultHttpErrorDetectionStrategy.IsTransient(System.Exception)">
             <summary>
             Returns true if status code in HttpRequestExceptionWithStatus exception is greater 
@@ -969,94 +946,6 @@
         <member name="T:Hyak.Common.TransientFaultHandling.ExponentialBackoff">
             <summary>
             A retry strategy with backoff parameters for calculating the exponential delay between retries.
-            </summary>
-        </member>
-        <member name="T:Hyak.Common.TransientFaultHandling.RetryStrategy">
-            <summary>
-            Represents a retry strategy that determines the number of retry attempts and the interval between retries.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount">
-            <summary>
-            Represents the default number of retry attempts.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientBackoff">
-            <summary>
-            Represents the default amount of time used when calculating a random delta in the exponential delay between retries.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMaxBackoff">
-            <summary>
-            Represents the default maximum amount of time used when calculating the exponential delay between retries.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMinBackoff">
-            <summary>
-            Represents the default minimum amount of time used when calculating the exponential delay between retries.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryInterval">
-            <summary>
-            Represents the default interval between retries.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryIncrement">
-            <summary>
-            Represents the default time increment between retry attempts in the progressive delay policy.
-            </summary>
-        </member>
-        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultFirstFastRetry">
-            <summary>
-            Represents the default flag indicating whether the first retry attempt will be made immediately,
-            whereas subsequent retries will remain subject to the retry interval.
-            </summary>
-        </member>
-        <member name="M:Hyak.Common.TransientFaultHandling.RetryStrategy.#ctor(System.String,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Hyak.Common.TransientFaultHandling.RetryStrategy"/> class. 
-            </summary>
-            <param name="name">The name of the retry strategy.</param>
-            <param name="firstFastRetry">true to immediately retry in the first attempt; otherwise, false. The subsequent retries will remain subject to the configured retry interval.</param>
-        </member>
-        <member name="M:Hyak.Common.TransientFaultHandling.RetryStrategy.GetShouldRetry">
-            <summary>
-            Returns the corresponding ShouldRetry delegate.
-            </summary>
-            <returns>The ShouldRetry delegate.</returns>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.NoRetry">
-            <summary>
-            Returns a default policy that performs no retries, but invokes the action only once.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultFixed">
-            <summary>
-            Returns a default policy that implements a fixed retry interval configured with the <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount"/> and <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryInterval"/> parameters.
-            The default retry policy treats all caught exceptions as transient errors.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultProgressive">
-            <summary>
-            Returns a default policy that implements a progressive retry interval configured with the <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount"/>, <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryInterval"/>, and <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryIncrement"/> parameters.
-            The default retry policy treats all caught exceptions as transient errors.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultExponential">
-            <summary>
-            Returns a default policy that implements a random exponential retry interval configured with the <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount"/>, <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMinBackoff"/>, <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMaxBackoff"/>, and <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientBackoff"/> parameters.
-            The default retry policy treats all caught exceptions as transient errors.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.FastFirstRetry">
-            <summary>
-            Gets or sets a value indicating whether the first retry attempt will be made immediately,
-            whereas subsequent retries will remain subject to the retry interval.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.Name">
-            <summary>
-            Gets the name of the retry strategy.
             </summary>
         </member>
         <member name="M:Hyak.Common.TransientFaultHandling.ExponentialBackoff.#ctor">
@@ -1263,6 +1152,18 @@
             </summary>
             <returns>The ShouldRetry delegate.</returns>
         </member>
+        <member name="T:Hyak.Common.TransientFaultHandling.ITransientErrorDetectionStrategy">
+            <summary>
+            Defines an interface that must be implemented by custom components responsible for detecting specific transient conditions.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.TransientFaultHandling.ITransientErrorDetectionStrategy.IsTransient(System.Exception)">
+            <summary>
+            Determines whether the specified exception represents a transient failure that can be compensated by a retry.
+            </summary>
+            <param name="ex">The exception object to be verified.</param>
+            <returns>true if the specified exception is considered as transient; otherwise, false.</returns>
+        </member>
         <member name="T:Hyak.Common.TransientFaultHandling.RetryingEventArgs">
             <summary>
             Contains information that is required for the <see cref="E:Hyak.Common.TransientFaultHandling.RetryPolicy.Retrying"/> event.
@@ -1335,6 +1236,12 @@
             <param name="throwIfSet">true to throw an exception if the manager is already set; otherwise, false. Defaults to <see langword="true"/>.</param>
             <exception cref="T:System.InvalidOperationException">The singleton is already set and <paramref name="throwIfSet"/> is true.</exception>
         </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryManager.Instance">
+            <summary>
+            Gets the default <see cref="T:Hyak.Common.TransientFaultHandling.RetryManager"/> for the application.
+            </summary>
+            <remarks>You can update the default retry manager by calling the <see cref="M:Hyak.Common.TransientFaultHandling.RetryManager.SetDefault(Hyak.Common.TransientFaultHandling.RetryManager,System.Boolean)"/> method.</remarks>
+        </member>
         <member name="M:Hyak.Common.TransientFaultHandling.RetryManager.#ctor(System.Collections.Generic.IEnumerable{Hyak.Common.TransientFaultHandling.RetryStrategy})">
             <summary>
             Initializes a new instance of the <see cref="T:Hyak.Common.TransientFaultHandling.RetryManager"/> class.
@@ -1355,6 +1262,11 @@
             <param name="retryStrategies">The complete set of retry strategies.</param>
             <param name="defaultRetryStrategyName">The default retry strategy.</param>
             <param name="defaultRetryStrategyNamesMap">The names of the default strategies for different technologies.</param>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryManager.DefaultRetryStrategyName">
+            <summary>
+            Gets or sets the default retry strategy name.
+            </summary>
         </member>
         <member name="M:Hyak.Common.TransientFaultHandling.RetryManager.GetRetryPolicy``1">
             <summary>
@@ -1391,20 +1303,32 @@
             <param name="technology">The technology to get the default retry strategy for.</param>
             <returns>The retry strategy for the specified technology.</returns>
         </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryManager.Instance">
-            <summary>
-            Gets the default <see cref="T:Hyak.Common.TransientFaultHandling.RetryManager"/> for the application.
-            </summary>
-            <remarks>You can update the default retry manager by calling the <see cref="M:Hyak.Common.TransientFaultHandling.RetryManager.SetDefault(Hyak.Common.TransientFaultHandling.RetryManager,System.Boolean)"/> method.</remarks>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryManager.DefaultRetryStrategyName">
-            <summary>
-            Gets or sets the default retry strategy name.
-            </summary>
-        </member>
         <member name="T:Hyak.Common.TransientFaultHandling.RetryPolicy">
             <summary>
             Provides the base implementation of the retry mechanism for unreliable actions and transient conditions.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.NoRetry">
+            <summary>
+            Returns a default policy that performs no retries, but invokes the action only once.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.DefaultFixed">
+            <summary>
+            Returns a default policy that implements a fixed retry interval configured with the default <see cref="T:Hyak.Common.TransientFaultHandling.FixedInterval"/> retry strategy.
+            The default retry policy treats all caught exceptions as transient errors.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.DefaultProgressive">
+            <summary>
+            Returns a default policy that implements a progressive retry interval configured with the default <see cref="T:Hyak.Common.TransientFaultHandling.Incremental"/> retry strategy.
+            The default retry policy treats all caught exceptions as transient errors.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.DefaultExponential">
+            <summary>
+            Returns a default policy that implements a random exponential retry interval configured with the default <see cref="T:Hyak.Common.TransientFaultHandling.FixedInterval"/> retry strategy.
+            The default retry policy treats all caught exceptions as transient errors.
             </summary>
         </member>
         <member name="M:Hyak.Common.TransientFaultHandling.RetryPolicy.#ctor(Hyak.Common.TransientFaultHandling.ITransientErrorDetectionStrategy,Hyak.Common.TransientFaultHandling.RetryStrategy)">
@@ -1447,6 +1371,21 @@
             <param name="retryCount">The number of retry attempts.</param>
             <param name="initialInterval">The initial interval that will apply for the first retry.</param>
             <param name="increment">The incremental time value that will be used to calculate the progressive delay between retries.</param>
+        </member>
+        <member name="E:Hyak.Common.TransientFaultHandling.RetryPolicy.Retrying">
+            <summary>
+            An instance of a callback delegate that will be invoked whenever a retry condition is encountered.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.RetryStrategy">
+            <summary>
+            Gets the retry strategy.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.ErrorDetectionStrategy">
+            <summary>
+            Gets the instance of the error detection strategy.
+            </summary>
         </member>
         <member name="M:Hyak.Common.TransientFaultHandling.RetryPolicy.ExecuteAction(System.Action)">
             <summary>
@@ -1515,44 +1454,6 @@
             <param name="retryCount">The current retry attempt count.</param>
             <param name="lastError">The exception that caused the retry conditions to occur.</param>
             <param name="delay">The delay that indicates how long the current thread will be suspended before the next iteration is invoked.</param>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.NoRetry">
-            <summary>
-            Returns a default policy that performs no retries, but invokes the action only once.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.DefaultFixed">
-            <summary>
-            Returns a default policy that implements a fixed retry interval configured with the default <see cref="T:Hyak.Common.TransientFaultHandling.FixedInterval"/> retry strategy.
-            The default retry policy treats all caught exceptions as transient errors.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.DefaultProgressive">
-            <summary>
-            Returns a default policy that implements a progressive retry interval configured with the default <see cref="T:Hyak.Common.TransientFaultHandling.Incremental"/> retry strategy.
-            The default retry policy treats all caught exceptions as transient errors.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.DefaultExponential">
-            <summary>
-            Returns a default policy that implements a random exponential retry interval configured with the default <see cref="T:Hyak.Common.TransientFaultHandling.FixedInterval"/> retry strategy.
-            The default retry policy treats all caught exceptions as transient errors.
-            </summary>
-        </member>
-        <member name="E:Hyak.Common.TransientFaultHandling.RetryPolicy.Retrying">
-            <summary>
-            An instance of a callback delegate that will be invoked whenever a retry condition is encountered.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.RetryStrategy">
-            <summary>
-            Gets the retry strategy.
-            </summary>
-        </member>
-        <member name="P:Hyak.Common.TransientFaultHandling.RetryPolicy.ErrorDetectionStrategy">
-            <summary>
-            Gets the instance of the error detection strategy.
-            </summary>
         </member>
         <member name="T:Hyak.Common.TransientFaultHandling.RetryPolicy.TransientErrorIgnoreStrategy">
             <summary>
@@ -1628,6 +1529,94 @@
             <param name="lastException">The exception that caused the retry conditions to occur.</param>
             <param name="delay">The delay that indicates how long the current thread will be suspended before the next iteration is invoked.</param>
             <returns><see langword="true"/> if a retry is allowed; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Hyak.Common.TransientFaultHandling.RetryStrategy">
+            <summary>
+            Represents a retry strategy that determines the number of retry attempts and the interval between retries.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount">
+            <summary>
+            Represents the default number of retry attempts.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientBackoff">
+            <summary>
+            Represents the default amount of time used when calculating a random delta in the exponential delay between retries.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMaxBackoff">
+            <summary>
+            Represents the default maximum amount of time used when calculating the exponential delay between retries.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMinBackoff">
+            <summary>
+            Represents the default minimum amount of time used when calculating the exponential delay between retries.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryInterval">
+            <summary>
+            Represents the default interval between retries.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryIncrement">
+            <summary>
+            Represents the default time increment between retry attempts in the progressive delay policy.
+            </summary>
+        </member>
+        <member name="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultFirstFastRetry">
+            <summary>
+            Represents the default flag indicating whether the first retry attempt will be made immediately,
+            whereas subsequent retries will remain subject to the retry interval.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.NoRetry">
+            <summary>
+            Returns a default policy that performs no retries, but invokes the action only once.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultFixed">
+            <summary>
+            Returns a default policy that implements a fixed retry interval configured with the <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount"/> and <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryInterval"/> parameters.
+            The default retry policy treats all caught exceptions as transient errors.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultProgressive">
+            <summary>
+            Returns a default policy that implements a progressive retry interval configured with the <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount"/>, <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryInterval"/>, and <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultRetryIncrement"/> parameters.
+            The default retry policy treats all caught exceptions as transient errors.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultExponential">
+            <summary>
+            Returns a default policy that implements a random exponential retry interval configured with the <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientRetryCount"/>, <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMinBackoff"/>, <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultMaxBackoff"/>, and <see cref="F:Hyak.Common.TransientFaultHandling.RetryStrategy.DefaultClientBackoff"/> parameters.
+            The default retry policy treats all caught exceptions as transient errors.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.TransientFaultHandling.RetryStrategy.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hyak.Common.TransientFaultHandling.RetryStrategy"/> class. 
+            </summary>
+            <param name="name">The name of the retry strategy.</param>
+            <param name="firstFastRetry">true to immediately retry in the first attempt; otherwise, false. The subsequent retries will remain subject to the configured retry interval.</param>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.FastFirstRetry">
+            <summary>
+            Gets or sets a value indicating whether the first retry attempt will be made immediately,
+            whereas subsequent retries will remain subject to the retry interval.
+            </summary>
+        </member>
+        <member name="P:Hyak.Common.TransientFaultHandling.RetryStrategy.Name">
+            <summary>
+            Gets the name of the retry strategy.
+            </summary>
+        </member>
+        <member name="M:Hyak.Common.TransientFaultHandling.RetryStrategy.GetShouldRetry">
+            <summary>
+            Returns the corresponding ShouldRetry delegate.
+            </summary>
+            <returns>The ShouldRetry delegate.</returns>
         </member>
     </members>
 </doc>

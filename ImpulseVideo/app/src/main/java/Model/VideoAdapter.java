@@ -2,6 +2,7 @@ package Model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -47,6 +48,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         intent.putExtra("desc",v.getDescription());
         intent.putExtra("prof",v.getProfileID());
         intent.putExtra("vidId",v.getId());
+        intent.putExtra("userId",v.getProfileID());
         mContext.startActivity(intent);
     }
     @NonNull
@@ -74,9 +76,10 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         holder.desc = (TextView) row.findViewById(R.id.list_desc);
         holder.prof = (TextView) row.findViewById(R.id.prof);
         holder.thumbnail = (ImageView) row.findViewById(R.id.thumbnail);
+        holder.date = (TextView) row.findViewById(R.id.item_video_date);
         //load image directly
         assert vid != null;
-        if(vid.getThumbUrl() != null)
+        if(!vid.getThumbUrl().isEmpty())
         {
             Picasso.with(getContext()).load(vid.getThumbUrl()).into(holder.thumbnail);
             Log.v(TAG, "Download Completed :)");
@@ -88,6 +91,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         holder.title.setText(vid.getTitle());
         holder.desc.setText(vid.getDescription());
         holder.prof.setText(p.getUsername());
+        holder.date.setText(vid.getCreate().substring(0,10));
         // Return the completed view to render on screen
         return row;
     }
@@ -97,5 +101,6 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         TextView desc;
         TextView prof;
         ImageView thumbnail;
+        TextView date;
     }
 }

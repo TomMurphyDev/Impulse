@@ -23,8 +23,9 @@ public class Video {
     private String StreamUrl;
     @com.google.gson.annotations.SerializedName("thumbUrl")
     private String ThumbUrl ;
-
-    public Video(String id, String title, String category, String description, boolean available, String profileID, String blobUrl, String streamUrl, String thumbUrl) {
+    @com.google.gson.annotations.SerializedName("createdAt")
+    private String Create;
+    public Video(String id, String title, String category, String description, boolean available, String profileID, String blobUrl, String streamUrl, String thumbUrl,String create) {
         this.id = id;
         Title = title;
         Category = category;
@@ -34,6 +35,7 @@ public class Video {
         BlobUrl = blobUrl;
         StreamUrl = streamUrl;
         ThumbUrl = thumbUrl;
+        Create = create;
     }
     public Video(String id, String title, String category, String description, String profileID, String blobUrl) {
         this.id = id;
@@ -125,5 +127,11 @@ public class Video {
 
     public void setThumbUrl(String thumbUrl) {
         ThumbUrl = thumbUrl;
+    }
+    public String getCreate() {
+        return Create;
+    }
+    public void setCreate(String create) {
+        this.Create = create;
     }
 }

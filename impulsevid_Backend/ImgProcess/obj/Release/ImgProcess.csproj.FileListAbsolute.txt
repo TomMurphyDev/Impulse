@@ -145,3 +145,8 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\obj\Release\ImgProcess.csprojResolveAssemblyReference.cache
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\obj\Release\ImgProcess.exe
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\obj\Release\ImgProcess.pdb
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.WindowsAzure.MediaServices.Client.Common.Authentication.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml

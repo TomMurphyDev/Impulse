@@ -7,7 +7,6 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Releas
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Hyak.Common.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\impulsevidService.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Common.dll
-C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Common.NetFramework.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.KeyVault.Core.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Mobile.Server.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Mobile.Server.Entity.dll
@@ -52,7 +51,6 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Releas
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\EntityFramework.SqlServer.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Hyak.Common.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Common.xml
-C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Common.NetFramework.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Mobile.Server.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Mobile.Server.Entity.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.Mobile.Server.Tables.xml
@@ -157,8 +155,16 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Releas
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\ru\Microsoft.Azure.Mobile.Server.Authentication.resources.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\zh-Hans\Microsoft.Azure.Mobile.Server.Authentication.resources.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\zh-Hant\Microsoft.Azure.Mobile.Server.Authentication.resources.dll
-C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.csproj.App.config
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.csprojResolveAssemblyReference.cache
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.exe
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\obj\Release\VideoProcess.pdb
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\config.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Logging.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Tokens.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.WindowsAzure.MediaServices.Client.Common.Authentication.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Logging.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Tokens.xml
