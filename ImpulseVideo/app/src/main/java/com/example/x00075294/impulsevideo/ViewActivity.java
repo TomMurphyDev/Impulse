@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -14,10 +15,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devbrackets.android.exomedia.ExoMedia;
 import com.devbrackets.android.exomedia.core.video.scale.ScaleType;
 import com.devbrackets.android.exomedia.listener.VideoControlsButtonListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
@@ -28,12 +31,14 @@ import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.Picasso;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import DTO.CommentDto;
@@ -84,6 +89,9 @@ public class ViewActivity extends AppCompatActivity {
         Drawable myIcon = getResources().getDrawable(R.drawable.ic_chrome_reader_mode_black_24dp);
         Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_replay_black_24dp);
         final VideoView v = (VideoView) findViewById(R.id.video_view_watch);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean lowq =  prefs.getBoolean("data_switch", true);
+        Log.v("FanatS:", lowq + "");
         /**
          * make connection to app back end
          * set timeout time longer
@@ -177,8 +185,12 @@ public class ViewActivity extends AppCompatActivity {
         });
         titletext.setText(title);
         desc.setText(description);
-        creatortext.setText(userID);
+        creatortext.setText(creatortext.getText()+profileId);
         v.setVideoURI(myUri);
+        if(lowq){
+            v.setTrack(ExoMedia.RendererType.VIDEO,5);
+            Log.v("789::","Selecting lowest available video");
+        }
         v.getVideoControls().setNextButtonRemoved(false);
         v.getVideoControls().setPreviousButtonRemoved(false);
         v.getVideoControls().setNextDrawable(myIcon2);
@@ -211,6 +223,7 @@ public class ViewActivity extends AppCompatActivity {
                 return false;
             }
         });
+            new LoadProfile().execute();
     }
 
     private boolean loadUserTokenCache(MobileServiceClient client) {
@@ -268,7 +281,40 @@ public class ViewActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.commentResult);
         listView.setAdapter(adapter);
     }
+    class LoadProfile extends AsyncTask<Void, Void, Void> {
+        Profile lookup;
+        final TextView creatortext = (TextView) findViewById(R.id.view_creatorlabel);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
+        @Override
+        protected Void doInBackground(Void... params) {
+            SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
+            String profileId = prefs.getString(USERIDPREF, null);
+            if (profileId != null) {
+                profileId = profileId.substring(4);
+            }
+            // Do your request
+            try {
+                lookup = mProfileTable.lookUp(profileId).get();
+            } catch (Exception e) {
+                // Output the stack trace.
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            final TextView creatortext = (TextView) findViewById(R.id.view_creatorlabel);
+            if (lookup != null) {
+                creatortext.setText(lookup.getUsername());
+            }
+        }
+    }
     private class LoadVideoComments extends AsyncTask<String, Void, Void> {
         List<CommentDto> comments = new ArrayList<>();
         Profile lookup;

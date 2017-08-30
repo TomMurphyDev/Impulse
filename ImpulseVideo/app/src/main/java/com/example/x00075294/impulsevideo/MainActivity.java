@@ -1,6 +1,8 @@
 package com.example.x00075294.impulsevideo;
 
 import android.Manifest;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -17,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -37,6 +40,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
+import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 import com.squareup.okhttp.OkHttpClient;
@@ -61,31 +65,43 @@ import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSy
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import Model.Comment;
 import Model.Profile;
 import Model.Video;
 import Model.VideoAdapter;
 
+import static android.R.attr.value;
 import static android.support.design.widget.Snackbar.*;
 import static com.example.x00075294.impulsevideo.LaunchActivity.SHAREDPREFFILE;
 import static com.example.x00075294.impulsevideo.LaunchActivity.TOKENPREF;
 import static com.example.x00075294.impulsevideo.LaunchActivity.USERIDPREF;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "IMP:Main -->: ";
     private static final int MY_PERMISSIONS_REQUEST_USE_CAMERA = 101;
-    // --Commented out by Inspection (17/04/2017 23:26):private static final int MY_PERMISSIONS_WRITE_STORAGE = 102;
     private static final int REQUEST_VIDEO_CAPTURE = 1;
     private static MobileServiceTable<Profile> mProfileTable;
     private MobileServiceTable<Video> mVideoTable;
+    private MobileServiceTable<Comment> mCommentTable;
     private List<Video> results = null;
+    private List<Video> comments = null;
     private MobileServiceList<Video> searchVid = null;
     private MobileServiceList<Profile> searchUser = null;
     private TextView thumbName;
@@ -123,6 +139,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection deprecation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        // Display the fragment as the main content.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO, Manifest.permission.MANAGE_DOCUMENTS}, MY_PERMISSIONS_REQUEST_USE_CAMERA);
@@ -151,6 +168,7 @@ public class MainActivity extends AppCompatActivity
             //local copy of table for manipulations to be performed on
             mVideoTable = mClient.getTable(Video.class);
             mProfileTable = mClient.getTable(Profile.class);
+            mCommentTable = mClient.getTable(Comment.class);
             //load the verified user from google sign in
             if (loadUserTokenCache(mClient)) {
                 Log.v(TAG, "Connecting");
@@ -165,13 +183,6 @@ public class MainActivity extends AppCompatActivity
 
         }
         new LoadProfileDetails().execute();
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            new Search().execute(query);
-            Log.v(TAG, "Search invoked");
-        }
     }
     @Override
     public boolean onSearchRequested() {
@@ -280,10 +291,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
-        SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
-        SearchView searchView = (SearchView) menu.findItem( R.id.app_bar_search ).getActionView();
-        searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
         return super.onCreateOptionsMenu( menu );
     }
 
@@ -296,15 +303,13 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            finish();
-            return true;
-        }
-        if (id == R.id.app_bar_search) {
+            Log.v(TAG, "Load Settings ..... ");
+            Intent i = new Intent(this, PreferencesActivity.class);
+            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -320,9 +325,7 @@ public class MainActivity extends AppCompatActivity
             userId = userId.substring(4);
             new LoadMyVideos().execute(userId);
         } else if (id == R.id.nav_trends) {
-            new LoadVideoDetails().execute("");
-        } else if (id == R.id.nav_Analytics) {
-
+            new TrendSearch().execute();
         } else if (id == R.id.nav_comedy) {
             new LoadVideoDetails().execute("comedy");
         } else if (id == R.id.nav_music) {
@@ -341,7 +344,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -349,27 +351,16 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
-
     private void loadProfile() {
         Log.v(TAG, "Load profile ..... ");
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
-
-    private void loadVideo() {
-        Log.v(TAG, "Load Video..... ");
-        //Intent intent = new Intent(this, FullscreenActivity.class);
-        //startActivity(intent);
-    }
-
     private void loadPreview(Uri v) {
         Log.v(TAG, "Load preview ..... ");
         Intent intent = new Intent(this, VideoPreviewActivity.class);
         intent.putExtra("videoUri", v.toString());
         startActivity(intent);
-    }
-    private void loadThumb() {
-        Log.v(TAG, "Load Thumbs ..... ");
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -378,7 +369,6 @@ public class MainActivity extends AppCompatActivity
             loadPreview(videoUri);
         }
     }
-
     class LoadProfileDetails extends AsyncTask<Void, Void, Void> {
         Profile lookup;
         @Override
@@ -607,4 +597,65 @@ public class MainActivity extends AppCompatActivity
                 pd.dismiss();
             }
         }
+    class TrendSearch extends AsyncTask<Void, Void, Void> {
+        MobileServiceList<Video> lookup;
+        List<Video> trending= new ArrayList<>();
+        ProgressDialog pd;
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String date = df.format(Calendar.getInstance().getTime());
+        int day = Integer.parseInt(date.substring(0,2));
+        int month = Integer.parseInt(date.substring(3,5));
+        int year = Integer.parseInt(date.substring(6,10));
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                List<Comment> res = mCommentTable.where().day("CreatedAt").eq(day).and().month("CreatedAt").eq(month).and().year("CreatedAt").eq(year).select("VideoID").orderBy("VideoID", QueryOrder.Ascending).execute().get();
+                List<String> idList = new ArrayList<String>();
+                for (Comment c:res) {
+                   idList.add(c.getVideoID());
+                }
+                final Map<String, Integer> counter = new HashMap<String, Integer>();
+                for (String str : idList) {
+                    counter.put(str, 1 + (counter.containsKey(str) ? counter.get(str) : 0));
+                }
+                Object[] a = counter.entrySet().toArray();
+                Arrays.sort(a, new Comparator() {
+                    public int compare(Object o1, Object o2) {
+                        return ((Map.Entry<String, Integer>) o2).getValue()
+                                .compareTo(((Map.Entry<String, Integer>) o1).getValue());
+                    }
+                });
+                for (Object mapval:a) {
+                    String s = ((Map.Entry<String, Integer>) mapval).getKey().toString();
+                    Log.v("LOOOKUP",s);
+                    lookup = mVideoTable.where().field("id").eq(s).execute().get();
+                    Log.v("LOOOKUP", String.valueOf(lookup.size()));
+                    if(lookup.get(0) != null){
+                        trending.add(lookup.get(0));
+                    }
+
+                }
+            } catch (Exception e) {
+                // Output the stack trace.
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("loading");
+            pd.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            populateVideoList(trending);
+            pd.dismiss();
+        }
+    }
 }

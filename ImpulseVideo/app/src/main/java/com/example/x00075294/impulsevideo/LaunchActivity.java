@@ -116,8 +116,6 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
         Log.v(TAG,"Begin Authorization");
-
-       // authenticate();
     }
     private void authenticate() {
 
@@ -172,6 +170,7 @@ public class LaunchActivity extends AppCompatActivity {
                     if(mClient.getCurrentUser() != null){
                         cacheUserToken(mClient.getCurrentUser());
                         new ProfileCheck().execute();
+                        loadMain();
                     }
                 }
             }
@@ -247,8 +246,9 @@ public class LaunchActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
+            Log.v(TAG,"jUMP tO MAIN");
             super.onPostExecute(result);
-            loadMain();
+
         }
     }
     private void cacheUserToken(MobileServiceUser user)

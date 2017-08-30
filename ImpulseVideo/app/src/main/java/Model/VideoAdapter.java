@@ -64,13 +64,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             row = inflater.inflate(R.layout.item_video, parent, false);
         }
-        row.setTag(vid);
-        row.setOnClickListener(new AdapterView.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                loadPreview(vid);
-            }
-        });
+
         holder = new VideoHolder();
         holder.title = (TextView) row.findViewById(R.id.title_list);
         holder.desc = (TextView) row.findViewById(R.id.list_desc);
@@ -78,6 +72,7 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         holder.thumbnail = (ImageView) row.findViewById(R.id.thumbnail);
         holder.date = (TextView) row.findViewById(R.id.item_video_date);
         //load image directly
+        row.setTag(vid);
         assert vid != null;
         if(!vid.getThumbUrl().isEmpty())
         {
@@ -90,8 +85,14 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         t.new LoadProfile((TextView) row.findViewById(R.id.prof)).execute(vid.getProfileID());
         holder.title.setText(vid.getTitle());
         holder.desc.setText(vid.getDescription());
-        holder.prof.setText(p.getUsername());
         holder.date.setText(vid.getCreate().substring(0,10));
+        String san = (String) holder.prof.getText();
+        row.setOnClickListener(new AdapterView.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                loadPreview(vid);
+            }
+        });
         // Return the completed view to render on screen
         return row;
     }

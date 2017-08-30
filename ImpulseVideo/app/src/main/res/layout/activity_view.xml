@@ -16,69 +16,65 @@
         app:useDefaultControls="true"
         android:clickable="true"
         />
-        <ScrollView
-            android:id="@+id/video_view_info"
-            android:visibility="invisible"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/background_light"
+        android:padding="25dp"
+        android:visibility="invisible"
+        android:id="@+id/video_view_info">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_disp_title"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            android:textColor="@color/primary_text" />
+
+        <TextView
+            android:text="By: "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_creatorlabel"
+            android:textIsSelectable="true"
+            android:textSize="24sp"
+            android:textAlignment="viewEnd"
+            android:textStyle="normal|italic"
+            android:textColor="@color/accent"
+            android:textAllCaps="false"
+            android:typeface="monospace" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:id="@+id/view_desc"
+            android:textSize="30sp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="normal"
+            app:srcCompat="@android:drawable/ic_menu_edit"
+            android:id="@+id/ViewFab"
+            app:elevation="5dp"
+            android:layout_gravity="end" />
+
+        <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:id="@+id/commentResult" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@android:color/background_light"
-                android:padding="25dp">
+        <Button
+            android:text="@string/dismiss"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:id="@+id/dismiss" />
+    </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_disp_title"
-                    android:textAlignment="center"
-                    android:textSize="40sp"
-                    android:textColor="@color/primary_text" />
-
-                <TextView
-                    android:text="By: "
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_creatorlabel"
-                    android:textIsSelectable="true"
-                    android:textSize="24sp"
-                    android:textAlignment="viewEnd"
-                    android:textStyle="normal|italic"
-                    android:textColor="@color/accent"
-                    android:textAllCaps="false"
-                    android:typeface="monospace" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="39dp"
-                    android:id="@+id/view_desc"
-                    android:textSize="30sp" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    app:fabSize="normal"
-                    app:srcCompat="@android:drawable/ic_menu_edit"
-                    android:id="@+id/ViewFab"
-                    app:elevation="5dp"
-                    android:layout_gravity="end" />
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/commentResult" />
-
-                <Button
-                    android:text="@string/dismiss"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_gravity="bottom"
-                    android:id="@+id/dismiss" />
-            </LinearLayout>
-        </ScrollView>
 </RelativeLayout>

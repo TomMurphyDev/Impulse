@@ -100,6 +100,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
                     String category = cat.getSelectedItem().toString();
                     Video up = new Video(ti,desc,category);
                     new uploadVideo().execute(up);
+                    finish();
                 }
             }
         });
@@ -219,13 +220,9 @@ public class VideoPreviewActivity extends AppCompatActivity {
         final SharedPreferences prefs = getSharedPreferences(SHAREDPREFFILE, Context.MODE_PRIVATE);
         String profileId = prefs.getString(USERIDPREF, null);
         String vidUrl;
-        ProgressDialog pd;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(VideoPreviewActivity.this);
-            pd.setMessage("loading");
-            pd.show();
         }
         @Override
         protected Void doInBackground(Video... videos) {
@@ -258,8 +255,6 @@ public class VideoPreviewActivity extends AppCompatActivity {
                 assert fileInputStream != null;
                 blob.upload(fileInputStream,fileInputStream.available());
                 vidUrl = blob.getUri().toURL().toString();
-                Log.v(TAG, "Located at " + blob.getUri().toURL().toString());
-
                 CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
                 CloudQueue vidQ = queueClient.getQueueReference("videorequest");
                 vidQ.createIfNotExists();
@@ -290,13 +285,7 @@ public class VideoPreviewActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (pd != null)
-            {
-                Log.v(TAG, "Upload Completed :)");
-                pd.dismiss();
-                loadMain();
-                finish();
-            }
+            finish();
         }
     }
 }
