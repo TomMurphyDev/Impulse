@@ -1,7 +1,7 @@
 package Model;
 
 /**
- * Created by thomas murphy on 08/05/2017.
+ * Created by Thomas Murphy X00075294 on 08/05/2017.
  */
 public class Comment {
 

@@ -10,28 +10,28 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/AppTheme">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_main_thumb"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:src="@drawable/ic_person_black_24dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FF999999" />
+        app:civ_border_color="@color/accent"
+        app:civ_border_width="2dp" />
 
     <TextView
+        android:id="@+id/username_main_thumb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/android_studio"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:id="@+id/username_main_thumb" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
+        android:id="@+id/location_thumb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/android_studio_android_com"
-        android:id="@+id/location_thumb" />
+        android:text="@string/android_studio_android_com" />
 
 </LinearLayout>

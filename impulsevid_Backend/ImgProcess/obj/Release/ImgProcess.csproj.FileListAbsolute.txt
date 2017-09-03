@@ -150,3 +150,5 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.WindowsAzure.MediaServices.Client.Common.Authentication.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\ImgProcess.exe.CodeAnalysisLog.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\ImgProcess\bin\Release\ImgProcess.exe.lastcodeanalysissucceeded

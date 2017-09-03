@@ -1,11 +1,9 @@
 package Model;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.x00075294.impulsevideo.MainActivity;
-import com.example.x00075294.impulsevideo.R;
-import com.example.x00075294.impulsevideo.ViewActivity;
+
+import com.impulsevid.x00075294.impulsevideo.MainActivity;
+import com.impulsevid.x00075294.impulsevideo.R;
+import com.impulsevid.x00075294.impulsevideo.ViewActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import Model.Video;
 
 /**
  * Created by Thomas Murphy on 03/04/2017.
@@ -29,9 +27,10 @@ import Model.Video;
 public class VideoAdapter extends ArrayAdapter<Video> {
 
     private static final String TAG = "IMP: List Loader";
-    private String[] imageURLArray;
     public List<Video> vids;
+    private String[] imageURLArray;
     private Context mContext;
+
     public VideoAdapter(Context context, int resource, List<Video> objects) {
         super(context, resource, objects);
     }
@@ -40,17 +39,19 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         super(context, 0, arrayOfVideo);
         this.mContext = context;
     }
+
     private void loadPreview(Video v) {
         Log.v(TAG, "Load preview ..... ");
         Intent intent = new Intent(mContext, ViewActivity.class);
         intent.putExtra("videoUri", v.getStreamUrl());
-        intent.putExtra("title",v.getTitle());
-        intent.putExtra("desc",v.getDescription());
-        intent.putExtra("prof",v.getProfileID());
-        intent.putExtra("vidId",v.getId());
-        intent.putExtra("userId",v.getProfileID());
+        intent.putExtra("title", v.getTitle());
+        intent.putExtra("desc", v.getDescription());
+        intent.putExtra("prof", v.getProfileID());
+        intent.putExtra("vidId", v.getId());
+        intent.putExtra("userId", v.getProfileID());
         mContext.startActivity(intent);
     }
+
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -74,20 +75,19 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         //load image directly
         row.setTag(vid);
         assert vid != null;
-        if(!vid.getThumbUrl().isEmpty())
-        {
+        if (!vid.getThumbUrl().isEmpty()) {
             Picasso.with(getContext()).load(vid.getThumbUrl()).into(holder.thumbnail);
             Log.v(TAG, "Download Completed :)");
-            Log.v(TAG,vid.getStreamUrl());
+            Log.v(TAG, vid.getStreamUrl());
         }
         Profile p = new Profile();
         MainActivity t = new MainActivity();
         t.new LoadProfile((TextView) row.findViewById(R.id.prof)).execute(vid.getProfileID());
         holder.title.setText(vid.getTitle());
         holder.desc.setText(vid.getDescription());
-        holder.date.setText(vid.getCreate().substring(0,10));
+        holder.date.setText(vid.getCreate().substring(0, 10));
         String san = (String) holder.prof.getText();
-        row.setOnClickListener(new AdapterView.OnClickListener(){
+        row.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadPreview(vid);
@@ -96,8 +96,8 @@ public class VideoAdapter extends ArrayAdapter<Video> {
         // Return the completed view to render on screen
         return row;
     }
-    static class VideoHolder
-    {
+
+    static class VideoHolder {
         TextView title;
         TextView desc;
         TextView prof;

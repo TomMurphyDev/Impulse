@@ -145,3 +145,10 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\M
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.WindowsAzure.MediaServices.Client.Common.FileEncryption.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.WindowsAzure.MediaServices.Client.dll
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Practices.TransientFaultHandling.Core.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.WindowsAzure.MediaServices.Client.Common.Authentication.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Azure.NotificationHubs.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\impulsevidService\bin\Microsoft.Azure.NotificationHubs.xml

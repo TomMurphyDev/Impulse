@@ -3,7 +3,7 @@ package Model;
 import java.net.URI;
 
 /**
- * Created by thomas murphy X00075294 on 20/04/2017.
+ * Created by Thomas Murphy X00075294 on 20/04/2017.
  */
 
 public class BlobInformation {
@@ -17,6 +17,7 @@ public class BlobInformation {
         BlobName = blobName;
         ProfileId = profileId;
     }
+
     public URI getBlobUri() {
         return BlobUri;
     }

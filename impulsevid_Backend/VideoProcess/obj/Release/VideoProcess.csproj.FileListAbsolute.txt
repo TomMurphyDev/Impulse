@@ -168,3 +168,14 @@ C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Releas
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Logging.xml
 C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.IdentityModel.Tokens.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.NotificationHubs.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.WebJobs.Extensions.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.WebJobs.Extensions.NotificationHubs.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\NCrontab.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\System.Threading.Tasks.Dataflow.dll
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.NotificationHubs.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.WebJobs.Extensions.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\Microsoft.Azure.WebJobs.Extensions.NotificationHubs.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\System.Threading.Tasks.Dataflow.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\VideoProcess.exe.CodeAnalysisLog.xml
+C:\Users\tomo\Desktop\Impulse\Impulse\impulsevid_Backend\VideoProcess\bin\Release\VideoProcess.exe.lastcodeanalysissucceeded

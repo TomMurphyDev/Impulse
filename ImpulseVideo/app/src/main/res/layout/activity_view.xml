@@ -1,10 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context="com.example.x00075294.impulsevideo.ViewActivity">
+    tools:context="com.impulsevid.x00075294.impulsevideo.ViewActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -13,68 +12,67 @@
         android:id="@+id/video_view_watch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:useDefaultControls="true"
         android:clickable="true"
-        />
+        app:useDefaultControls="true" />
 
     <LinearLayout
+        android:id="@+id/video_view_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@android:color/background_light"
+        android:orientation="vertical"
         android:padding="25dp"
-        android:visibility="invisible"
-        android:id="@+id/video_view_info">
+        android:visibility="invisible">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/view_disp_title"
-            android:textAlignment="center"
-            android:textSize="40sp"
-            android:textColor="@color/primary_text" />
-
-        <TextView
-            android:text="By: "
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/primary_text"
+            android:textSize="40sp" />
+
+        <TextView
             android:id="@+id/view_creatorlabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/by"
+            android:textAlignment="viewEnd"
+            android:textAllCaps="false"
+            android:textColor="@color/accent"
             android:textIsSelectable="true"
             android:textSize="24sp"
-            android:textAlignment="viewEnd"
             android:textStyle="normal|italic"
-            android:textColor="@color/accent"
-            android:textAllCaps="false"
             android:typeface="monospace" />
 
         <TextView
+            android:id="@+id/view_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="39dp"
-            android:id="@+id/view_desc"
             android:textSize="30sp" />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/ViewFab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:clickable="true"
-            app:fabSize="normal"
-            app:srcCompat="@android:drawable/ic_menu_edit"
-            android:id="@+id/ViewFab"
             app:elevation="5dp"
-            android:layout_gravity="end" />
+            app:fabSize="normal"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/commentResult" />
+            android:id="@+id/commentResult"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp" />
 
         <Button
-            android:text="@string/dismiss"
+            android:id="@+id/dismiss"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_gravity="bottom"
-            android:id="@+id/dismiss" />
+            android:text="@string/dismiss" />
     </LinearLayout>
 
 </RelativeLayout>

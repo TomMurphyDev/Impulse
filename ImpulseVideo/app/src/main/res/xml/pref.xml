@@ -2,8 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
         android:defaultValue="false"
-        android:title="Force Low Quality"
-        android:key="data_switch"
         android:icon="@drawable/ic_swap_vert_black_24dp"
-        android:summary="For those with poor data plans or below average internet speeds." />
+        android:key="data_switch"
+        android:summary="For those with poor data plans or below average internet speeds."
+        android:title="Force Low Quality" />
 </PreferenceScreen>

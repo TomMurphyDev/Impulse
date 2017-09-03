@@ -41,7 +41,7 @@
     <string name="video_thumbail_image">video thumbail image</string>
     <string name="logo_image">logo image</string>
     <string name="app_label">Impulse Video</string>
-    <string name="search_hint">search usernames, categories or titles...</string>
+    <string name="search_hint">search usernames, categories or titles…</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -118,4 +118,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="by">By:</string>
+    <string name="a_video_sharing_service_backed_by_azure_media_services">A video sharing service backed by Azure Media Services</string>
+    <string name="dummy_date">19/9/1999</string>
 </resources>

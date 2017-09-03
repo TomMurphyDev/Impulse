@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/content_video_preview"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-app:layout_behavior="@string/appbar_scrolling_view_behavior"
-tools:context="com.example.x00075294.impulsevideo.VideoPreviewActivity"
-tools:showIn="@layout/activity_video_preview">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_video_preview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.impulsevid.x00075294.impulsevideo.VideoPreviewActivity"
+    tools:showIn="@layout/activity_video_preview">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,85 +16,84 @@ tools:showIn="@layout/activity_video_preview">
         android:layout_weight="4"
         android:background="@color/cardview_dark_background"
         android:orientation="vertical">
+
         <VideoView
+            android:id="@+id/vipPrev"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:id="@+id/vipPrev" />
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dip"
-    android:orientation="vertical"
-    android:layout_weight="6"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
         android:layout_margin="10dp"
+        android:layout_weight="6"
+        android:orientation="vertical"
         android:showDividers="beginning|end">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent">
 
-            <TextView
-                android:text="@string/video_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="30sp"
-                android:layout_margin="5dp" />
+                android:orientation="vertical">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/editTextTitle"
-                android:hint="@string/choose_a_video_name"
-                android:fontFamily="sans-serif"
-                android:textSize="30sp"
-                style="@android:style/Widget.DeviceDefault.AutoCompleteTextView"
-                android:maxLines="1"
-                android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/video_title"
+                    android:textAppearance="@style/AppTheme"
+                    android:textSize="30sp" />
 
-            <TextView
-                android:text="@string/category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="30sp"
-                android:layout_margin="5dp" />
+                <EditText
+                    android:id="@+id/editTextTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:ems="10"
+                    android:fontFamily="sans-serif"
+                    android:hint="@string/choose_a_video_name"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:textSize="30sp" />
 
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:id="@+id/spinner"
-                android:spinnerMode="dialog"
-                android:entries="@array/spinnerItems"
-                android:layout_margin="5dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/category"
+                    android:textAppearance="@style/AppTheme"
+                    android:textSize="30sp" />
 
-            <TextView
-                android:text="@string/description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:labelFor="@+id/editDescription"
-                android:textSize="30sp"
-                android:layout_margin="5dp" />
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_margin="5dp"
+                    android:entries="@array/spinnerItems"
+                    android:spinnerMode="dialog" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:ems="10"
-                android:minLines="1"
-                android:maxLines="5"
-                android:id="@+id/editDescription" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:labelFor="@+id/editDescription"
+                    android:text="@string/description"
+                    android:textSize="30sp" />
+
+                <EditText
+                    android:id="@+id/editDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:maxLines="5"
+                    android:minLines="1" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

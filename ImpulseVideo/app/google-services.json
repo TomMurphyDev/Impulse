@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "609508538941",
+    "firebase_url": "https://impulsevideo-a32e8.firebaseio.com",
+    "project_id": "impulsevideo-a32e8",
+    "storage_bucket": "impulsevideo-a32e8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609508538941:android:2b483e649b33a327",
+        "android_client_info": {
+          "package_name": "com.impulsevid.x00075294.impulsevideo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609508538941-t68de0tjhs5ocl1946t3qk786ffpkg54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.impulsevid.x00075294.impulsevideo",
+            "certificate_hash": "5ed399ac6812eedd29a27bf89e87b60e7a06182b"
+          }
+        },
+        {
+          "client_id": "609508538941-46vr8g0e5us0ml3f5j3s6c547fbvhv45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBSFKATFr6eaNyWqq5yImy5Nh1_bKz9YA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609508538941-46vr8g0e5us0ml3f5j3s6c547fbvhv45.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

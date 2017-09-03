@@ -13,19 +13,36 @@ using System.Configuration;
 using System.Threading;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage;
+using VideoProcess.Extensions;
+using Microsoft.Azure.NotificationHubs;
 using System.Globalization;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Web;
 using System.Xml;
 using Microsoft.WindowsAzure;
-
+/***************************************************************************************
+*    Title: Gary ClynchWP  test application
+*    Author: Gary Clynch
+*    Date: 01/10/15
+*    Code version: <code version>
+*    Availability: emailed to me
+*
+***************************************************************************************/
+/***************************************************************************************
+*    Title: Notifications to WebApp
+*    Author: Vivien Chevallier
+*    Date: 1/1/17
+*    Code version: 1
+*    Availability: https://www.vivien-chevallier.com/Articles/sending-push-notifications-in-azure-webjobs-with-azure-notification-hubs-extension
+*
+***************************************************************************************/
 namespace VideoProcess
 {
     public class Functions
     {
         // This function will get triggered/executed when a new message is written 
-        // on an Azure Queue called queue.
+        // on an Azure Queue called video request
         static string accName = "impmedia";
         static string accKey = "pJ7qnzGA/7vusGbMYNWXGeToUkR6bo4W/yg3XeinDDY=";
         static CloudMediaContext context = null;
@@ -35,25 +52,34 @@ namespace VideoProcess
         //static CloudMediaContext context = new CloudMediaContext(accName,accKey);
         public static void ProcessVideo(
         [QueueTrigger("videorequest")] VideoBlobInformation blobInfo,
-        [Blob("{ProfileId}/{BlobName}", FileAccess.Read)] Stream input, TextWriter log)
+        [Blob("{ProfileId}/{BlobName}", FileAccess.Read)] Stream input, int dequeueCount ,TextWriter log, [NotificationHub] out Notification notification)
         {
-            VideoBlobInformation b = blobInfo;
-            string[] s = ConvertAndPrepareVideo(b, input,log);
-
-            // Entity Framework context class is not thread-safe, so it must
-            // be instantiated and disposed within the function.
-            using (impulsevidContext db = new impulsevidContext())
+            if (dequeueCount > 6)
             {
-                var id = blobInfo.VideoId;
-                Video ad = db.Videos.Find(id);
-                if (ad == null)
+                log.WriteLine("Failed to copy blob, name=" + blobInfo.BlobName);
+                string done = "Failed";
+                notification = new GcmNotification(done.ToGcmPayload());
+            }
+            else {
+                VideoBlobInformation b = blobInfo;
+                string[] s = ConvertAndPrepareVideo(b, input, log);
+                // Entity Framework context class is not thread-safe, so it must
+                // be instantiated and disposed within the function.
+                using (impulsevidContext db = new impulsevidContext())
                 {
-                    throw new Exception(String.Format("AdId {0} not found, can't create db entry", id.ToString()));
+                    var id = blobInfo.VideoId;
+                    Video ad = db.Videos.Find(id);
+                    if (ad == null)
+                    {
+                        throw new Exception("Database Error");
+                    }
+                    ad.StreamUrl = s[0];
+                    ad.ThumbUrl = s[1];
+                    ad.Available = true;
+                    db.SaveChanges();
+                    string done = "Your Video Has Finished Uploading and is Live";
+                    notification = new GcmNotification(done.ToGcmPayload());
                 }
-                ad.StreamUrl=s[0];
-                ad.ThumbUrl = s[1];
-                ad.Available = true;
-                db.SaveChanges();
             }
         }
         private static IMediaProcessor GetLatestMediaProcessorByName(string mediaProcessorName)
